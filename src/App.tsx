@@ -1,35 +1,46 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import CreateEventForm from "./components/CreateEventForm";
+import EditEventForm from "./components/EditEventForm";
+import { sports } from "./assets/sports";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const token = localStorage.getItem("token") || "1"; // Replace token from JWT
+  const eventExample = {
+    id: 1,
+    title: "Olympic Swimming Championship",
+    location: "London Aquatic Centre",
+    description:
+      "A thrilling swimming competition featuring top athletes from around the world.",
+    date: "2024-09-15T14:30:00",
+    sport: "Swimming",
+    created_at: "2024-08-01T10:00:00Z",
+    last_updated: "2024-08-05T15:00:00Z",
+    cancelled: false,
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route
+            path="/create"
+            element={<CreateEventForm sports={sports} token={token} />}
+          />
+          <Route
+            path="/edit"
+            element={
+              <EditEventForm
+                event={eventExample}
+                sports={sports}
+                token={token}
+              />
+            }
+          />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <h1 className="text-3xl font-bold underline">Hello Mates!</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   );
 }
 
