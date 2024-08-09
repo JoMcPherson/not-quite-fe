@@ -12,7 +12,7 @@ export const eventExamples = [
     cancelled: false,
     maxAttendees: 100,
     image:
-      "https://unsplash.com/photos/hispanic-young-man-swimmer-athlete-wearing-cap-in-a-swimming-training-at-the-pool-in-mexico-latin-america-f2HB34vrNj8h",
+      "https://images.unsplash.com/photo-1600965962361-9035dbfd1c50?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     id: 2,
@@ -26,7 +26,8 @@ export const eventExamples = [
     last_updated: "2024-08-06T16:00:00Z",
     cancelled: false,
     maxAttendees: 150,
-    image: "https://source.unsplash.com/featured/?track-and-field",
+    image:
+      "https://images.unsplash.com/photo-1582893523490-dd68ebc7884e?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     id: 3,
@@ -40,6 +41,7 @@ export const eventExamples = [
     last_updated: "2024-08-07T14:00:00Z",
     cancelled: false,
     maxAttendees: 200,
-    image: "https://source.unsplash.com/featured/?gymnastics",
+    image:
+      "https://images.unsplash.com/photo-1571726656333-2640ca759d22?q=80&w=3336&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
