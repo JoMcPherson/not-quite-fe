@@ -1,19 +1,5 @@
 import React, { useState } from "react";
-
-interface Event {
-  id: number;
-  title: string;
-  location: string;
-  description: string;
-  date: string;
-  sport: string;
-  created_at: string;
-  last_updated: string;
-  cancelled: boolean;
-  maxAttendees: number;
-  image: string;
-}
-
+import { Event } from "../interfaces/Event";
 interface MainPageProps {
   events: Event[];
 }
