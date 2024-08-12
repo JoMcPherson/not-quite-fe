@@ -24,6 +24,9 @@ const Header = () => {
               Edit Event
             </Link>
           </li>
+          <li>
+            <Link to="/event/:id">Event Detail Page</Link>
+          </li>
         </ul>
       </nav>
     </header>
