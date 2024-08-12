@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../App.css";
+import { Event } from "../interfaces/Event";
 
 interface EventFormProps {
   sports: string[];
@@ -8,13 +9,17 @@ interface EventFormProps {
 }
 
 const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<
+    Omit<Event, "id" | "createdAt" | "lastUpdated" | "cancelled">
+  >({
     title: "",
+    cognitoUserId: "test",
+    image: "",
     location: "",
     description: "",
     date: "",
     sport: "",
-    maxAttendees: "",
+    maxAttendees: 0,
   });
 
   const handleChange = (
@@ -34,9 +39,9 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
     const eventPayload = {
       ...formData,
       //UPDATE WITH TOKEN
-      user_id: token,
+      cognitoUserid: token,
+      image: `src/images/${formData.sport}.webp`,
       //UPDATE WITH IMAGE
-      image: "https://source.unsplash.com/random",
       created_at: new Date().toISOString(),
       last_updated: new Date().toISOString(),
       cancelled: false,
@@ -44,7 +49,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
 
     try {
       // UPDATE WITH ACTUAL API
-      const response = await axios.post("/api/events", eventPayload);
+      const response = await axios.post("/events", eventPayload);
       console.log("Event created successfully:", response.data);
     } catch (error) {
       console.error("Error creating event:", error);

@@ -1,50 +1,57 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom"; // Import useParams
 import "../App.css";
+import { Event } from "../interfaces/Event";
 
 interface EditEventFormProps {
-  event: {
-    id: number;
-    title: string;
-    location: string;
-    description: string;
-    date: string;
-    sport: string;
-    maxAttendees: number;
-    created_at: string;
-    last_updated: string;
-    cancelled: boolean;
-  };
+  events: Event[]; // Changed from `event` to `events` to handle an array
   sports: string[];
   token: string;
 }
 
 const EditEventForm: React.FC<EditEventFormProps> = ({
-  event,
+  events,
   sports,
   token,
 }) => {
-  const [formData, setFormData] = useState({
-    title: event.title,
-    location: event.location,
-    description: event.description,
-    date: event.date,
-    sport: event.sport,
-    maxAttendees: event.maxAttendees,
-    cancelled: event.cancelled,
+  const { eventId } = useParams<{ eventId: string }>(); // Extract eventId from URL
+  const [formData, setFormData] = useState<
+    Omit<Event, "id" | "createdAt" | "lastUpdated">
+  >({
+    title: "",
+    cognitoUserId: token,
+    location: "",
+    description: "",
+    date: "",
+    sport: "",
+    maxAttendees: 0,
+    cancelled: false,
+    image: "", // Added if needed
   });
 
   useEffect(() => {
-    setFormData({
-      title: event.title,
-      location: event.location,
-      description: event.description,
-      date: event.date,
-      sport: event.sport,
-      maxAttendees: event.maxAttendees,
-      cancelled: event.cancelled,
-    });
-  }, [event]);
+    if (eventId) {
+      const selectedEvent = events.find(
+        (event) => event.id === parseInt(eventId)
+      );
+
+      if (selectedEvent) {
+        console.log(selectedEvent, "selectedEvent");
+        setFormData({
+          title: selectedEvent.title,
+          cognitoUserId: selectedEvent.cognitoUserId,
+          location: selectedEvent.location,
+          description: selectedEvent.description,
+          date: selectedEvent.date,
+          sport: selectedEvent.sport,
+          maxAttendees: selectedEvent.maxAttendees,
+          cancelled: selectedEvent.cancelled,
+          image: selectedEvent.image,
+        });
+      }
+    }
+  }, [eventId, events]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -61,15 +68,15 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const eventPayload = {
+    const eventPayload: Omit<Event, "id"> = {
       ...formData,
-      user_id: token,
-      last_updated: new Date().toISOString(),
-      created_at: event.created_at, // Maintain original created_at timestamp
+      cognitoUserId: token,
+      lastUpdated: new Date().toISOString(),
+      createdAt: formData.createdAt || new Date().toISOString(),
     };
-    console.log("event data:", eventPayload);
+
     try {
-      const response = await axios.put(`/api/events/${event.id}`, eventPayload);
+      const response = await axios.put(`/events/${eventId}`, eventPayload);
       console.log("Event updated successfully:", response.data);
     } catch (error) {
       console.error("Error updating event:", error);
