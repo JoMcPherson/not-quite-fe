@@ -14,6 +14,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
     description: "",
     date: "",
     sport: "",
+    maxAttendees: "",
   });
 
   const handleChange = (
@@ -32,17 +33,17 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
 
     const eventPayload = {
       ...formData,
-      //UPDATE TOKEN DECODE
+      //UPDATE WITH TOKEN
       user_id: token,
-      //UPDATE IMAGE URL
+      //UPDATE WITH IMAGE
       image: "https://source.unsplash.com/random",
       created_at: new Date().toISOString(),
       last_updated: new Date().toISOString(),
       cancelled: false,
     };
-    console.log("event data:", eventPayload);
+
     try {
-      //UPDATE BACKEND URL
+      // UPDATE WITH ACTUAL API
       const response = await axios.post("/api/events", eventPayload);
       console.log("Event created successfully:", response.data);
     } catch (error) {
@@ -127,6 +128,20 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
             name="date"
             id="date"
             value={formData.date}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="maxAttendees" className="input-label">
+            Max Attendees
+          </label>
+          <input
+            type="number"
+            name="maxAttendees"
+            id="maxAttendees"
+            value={formData.maxAttendees}
             onChange={handleChange}
             className="input-field"
             required

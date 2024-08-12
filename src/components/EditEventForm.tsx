@@ -10,6 +10,7 @@ interface EditEventFormProps {
     description: string;
     date: string;
     sport: string;
+    maxAttendees: number;
     created_at: string;
     last_updated: string;
     cancelled: boolean;
@@ -29,6 +30,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
     description: event.description,
     date: event.date,
     sport: event.sport,
+    maxAttendees: event.maxAttendees,
     cancelled: event.cancelled,
   });
 
@@ -39,6 +41,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
       description: event.description,
       date: event.date,
       sport: event.sport,
+      maxAttendees: event.maxAttendees,
       cancelled: event.cancelled,
     });
   }, [event]);
@@ -66,7 +69,6 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
     };
     console.log("event data:", eventPayload);
     try {
-      // UPDATE BACKEND URL
       const response = await axios.put(`/api/events/${event.id}`, eventPayload);
       console.log("Event updated successfully:", response.data);
     } catch (error) {
@@ -151,6 +153,20 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
             name="date"
             id="date"
             value={formData.date}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="maxAttendees" className="input-label">
+            Max Attendees
+          </label>
+          <input
+            type="number"
+            name="maxAttendees"
+            id="maxAttendees"
+            value={formData.maxAttendees}
             onChange={handleChange}
             className="input-field"
             required
