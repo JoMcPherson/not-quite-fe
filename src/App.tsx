@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
+import EventDetailPage from "./components/EventDetailPage";
 import { sports } from "./assets/sports";
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
                 token={token}
               />
             }
+          />
+          <Route
+            path="/event/:id"
+            element={<EventDetailPage />}
           />
         </Routes>
       </div>
