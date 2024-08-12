@@ -4,8 +4,6 @@ import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
 import { sports } from "./assets/sports";
 import { Event } from "./interfaces/Event";
-// to be replace with backend api calls
-import { eventExamples } from "./assets/eventExamples";
 import MainPage from "./components/MainPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -23,6 +21,7 @@ function App() {
           "http://localhost:8080/events"
         );
         setEvents(response.data);
+        console.log(events);
       } catch (err) {
         setError("Failed to fetch events");
       } finally {

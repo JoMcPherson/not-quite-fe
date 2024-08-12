@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom"; // Import useParams
+import { useParams } from "react-router-dom";
 import "../App.css";
 import { Event } from "../interfaces/Event";
 
 interface EditEventFormProps {
-  events: Event[]; // Changed from `event` to `events` to handle an array
+  events: Event[];
   sports: string[];
   token: string;
 }
@@ -15,10 +15,8 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
   sports,
   token,
 }) => {
-  const { eventId } = useParams<{ eventId: string }>(); // Extract eventId from URL
-  const [formData, setFormData] = useState<
-    Omit<Event, "id" | "createdAt" | "lastUpdated">
-  >({
+  const { eventId } = useParams<{ eventId: string }>();
+  const [formData, setFormData] = useState<Omit<Event, "id" | "lastUpdated">>({
     title: "",
     cognitoUserId: token,
     location: "",
@@ -27,7 +25,8 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
     sport: "",
     maxAttendees: 0,
     cancelled: false,
-    image: "", // Added if needed
+    image: "",
+    createdAt: "", // Keep track of createdAt
   });
 
   useEffect(() => {
@@ -37,7 +36,6 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
       );
 
       if (selectedEvent) {
-        console.log(selectedEvent, "selectedEvent");
         setFormData({
           title: selectedEvent.title,
           cognitoUserId: selectedEvent.cognitoUserId,
@@ -48,6 +46,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
           maxAttendees: selectedEvent.maxAttendees,
           cancelled: selectedEvent.cancelled,
           image: selectedEvent.image,
+          createdAt: selectedEvent.createdAt, // Preserve createdAt
         });
       }
     }
@@ -71,8 +70,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
     const eventPayload: Omit<Event, "id"> = {
       ...formData,
       cognitoUserId: token,
-      lastUpdated: new Date().toISOString(),
-      createdAt: formData.createdAt || new Date().toISOString(),
+      lastUpdated: new Date().toISOString(), // Set lastUpdated to the current date/time
     };
 
     try {
