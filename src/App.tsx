@@ -7,6 +7,7 @@ import { Event } from "./interfaces/Event";
 import MainPage from "./components/MainPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import EventDetailPage from "./components/EventDetailPage";
 
 function App() {
   const token = localStorage.getItem("token") || "1"; // Replace token from JWT
@@ -50,6 +51,10 @@ function App() {
             element={
               <EditEventForm events={events} sports={sports} token={token} />
             }
+          />
+          <Route
+            path="/events/:eventId"
+            element={<EventDetailPage events={events} />}
           />
         </Routes>
       </div>
