@@ -40,7 +40,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
       ...formData,
       //UPDATE WITH TOKEN
       cognitoUserid: token,
-      image: `src/images/${formData.sport}.webp`,
+      image: `/images/${formData.sport.toLowerCase()}.jpg`,
       //UPDATE WITH IMAGE
       created_at: new Date().toISOString(),
       last_updated: new Date().toISOString(),
@@ -49,10 +49,13 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
 
     try {
       // UPDATE WITH ACTUAL API
-      const response = await axios.post("/events", eventPayload);
+      const response = await axios.post(
+        "http://localhost:8080/events",
+        eventPayload
+      );
       console.log("Event created successfully:", response.data);
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error("Error creating event:", error, eventPayload);
     }
   };
 
