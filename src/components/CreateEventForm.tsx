@@ -4,16 +4,16 @@ import "../App.css";
 import { Event } from "../interfaces/Event";
 
 interface EventFormProps {
+  user: any;
   sports: string[];
-  token: string;
 }
 
-const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
+const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
   const [formData, setFormData] = useState<
     Omit<Event, "id" | "createdAt" | "lastUpdated" | "cancelled">
   >({
     title: "",
-    cognitoUserId: "test",
+    cognitoUserId: user.userId,
     image: "",
     location: "",
     description: "",
@@ -38,17 +38,14 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
 
     const eventPayload = {
       ...formData,
-      //UPDATE WITH TOKEN
-      cognitoUserid: token,
-      image: `/images/${formData.sport.toLowerCase()}.jpg`,
-      //UPDATE WITH IMAGE
+      cognitoUserid: user.userId,
+      image: `/images/${formData.sport.toLowerCase()}.jpeg`,
       created_at: new Date().toISOString(),
       last_updated: new Date().toISOString(),
       cancelled: false,
     };
 
     try {
-      // UPDATE WITH ACTUAL API
       const response = await axios.post(
         "http://localhost:8080/events",
         eventPayload

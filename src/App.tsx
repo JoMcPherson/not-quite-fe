@@ -11,7 +11,6 @@ import axios from "axios";
 import EventDetailPage from "./components/EventDetailPage";
 
 function App() {
-  const token = localStorage.getItem("token") || "1"; // Replace token from JWT
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,28 +38,33 @@ function App() {
 
   return (
     <Authenticator>
-      <Router>
-        <div className="App">
-          <Header />
-          <Routes>
-            <Route path="/" element={<MainPage events={events} />} />
-            <Route
-              path="/create"
-              element={<CreateEventForm sports={sports} token={token} />}
-            />
-            <Route
-              path="/edit/:eventId"
-              element={
-                <EditEventForm events={events} sports={sports} token={token} />
-              }
-            />
-            <Route
-              path="/events/:eventId"
-              element={<EventDetailPage events={events} />}
-            />
-          </Routes>
-        </div>
-      </Router>
+      {({ user }) => (
+        <Router>
+          <div className="App">
+            <Header username={user?.username || ""} />
+            <Routes>
+              <Route
+                path="/"
+                element={<MainPage user={user} events={events} />}
+              />
+              <Route
+                path="/create"
+                element={<CreateEventForm user={user} sports={sports} />}
+              />
+              <Route
+                path="/edit/:eventId"
+                element={
+                  <EditEventForm user={user} events={events} sports={sports} />
+                }
+              />
+              <Route
+                path="/events/:eventId"
+                element={<EventDetailPage user={user} events={events} />}
+              />
+            </Routes>
+          </div>
+        </Router>
+      )}
     </Authenticator>
   );
 }

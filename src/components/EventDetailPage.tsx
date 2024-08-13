@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 
 interface EventDetailPageProps {
+  user: any;
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
 
