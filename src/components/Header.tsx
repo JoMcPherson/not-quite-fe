@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { Authenticator } from '@aws-amplify/ui-react';
+import Logo from "../../public/NotQuiteLogo.png";
 
 interface HeaderProps {
   username: string;
@@ -7,12 +9,21 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ username }) => {
   return (
     <header className="header bg-purple-200 p-4 shadow-md">
-      <nav className="max-w-4xl mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-purple-600">
+      <nav className="flex justify-between items-center">
+        <Link to="/">
+        <img
+        className="h-9 w-9 ml-4"
+        src={Logo}
+        alt="Not Quite's Logo"
+      />
+        </Link>
+        <h1 className="text-2xl ml-24 font-bold text-purple-600">
           Not Quite Olympians
         </h1>
-        <h1>Hello {username}</h1>
-        <ul className="flex space-x-4">
+
+        <ul className="flex space-x-4 mr-3">
+
+
           <li>
             <Link
               to="/create"
@@ -20,6 +31,13 @@ const Header: React.FC<HeaderProps> = ({ username }) => {
             >
               Create Event
             </Link>
+          </li>
+          <li>
+          <Authenticator>
+      {({ signOut }) => (
+          <Link to="/" onClick={signOut} className="text-white bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-full transition-all duration-300 ease-in-out">Sign out</Link>
+      )}
+    </Authenticator>
           </li>
         </ul>
       </nav>
