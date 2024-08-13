@@ -15,6 +15,15 @@ CREATE TABLE events(
     sport varchar(255) NOT NULL
 );
 
+CREATE TABLE event_attendees(
+    id serial PRIMARY KEY,
+    event_id int NOT NULL,
+    cognito_user_id varchar(255) NOT NULL,
+    joined_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+    CONSTRAINT unique_event_user UNIQUE (event_id, cognito_user_id)
+);
+
 INSERT INTO events(title, location, description, cognito_user_id, date, image, created_at, last_updated, cancelled, max_attendees, sport)
     VALUES ('Acrobatics Performance', 'Gymnasium A', 'Join us for an exciting acrobatics performance.', 'cognito-user-1', '2024-09-01 10:00:00', ' /images/acrobatics.jpg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE, 30, 'Acrobatics'),
 ('Archery Competition', 'Archery Range B', 'Test your archery skills in this competition.', 'cognito-user-1', '2024-09-02 11:00:00', ' /images/archery.webp', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE, 25, 'Archery'),

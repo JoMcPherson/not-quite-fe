@@ -4,7 +4,7 @@ export const sports = [
   "Artistic Swimming",
   "Track",
   "Badminton",
-  "Baseball/Softball",
+  "Baseball",
   "Basketball",
   "Handball",
   "Volleyball",
