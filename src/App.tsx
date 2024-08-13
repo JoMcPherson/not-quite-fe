@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
 import { sports } from "./assets/sports";
+import { Authenticator } from "@aws-amplify/ui-react";
 
 function App() {
   const token = localStorage.getItem("token") || "1"; // Replace token from JWT
@@ -20,27 +21,29 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route
-            path="/create"
-            element={<CreateEventForm sports={sports} token={token} />}
-          />
-          <Route
-            path="/edit"
-            element={
-              <EditEventForm
-                event={eventExample}
-                sports={sports}
-                token={token}
-              />
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
+    <Authenticator>
+      <Router>
+        <div className="App">
+          <Header />
+          <Routes>
+            <Route
+              path="/create"
+              element={<CreateEventForm sports={sports} token={token} />}
+            />
+            <Route
+              path="/edit"
+              element={
+                <EditEventForm
+                  event={eventExample}
+                  sports={sports}
+                  token={token}
+                />
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </Authenticator>
   );
 }
 
