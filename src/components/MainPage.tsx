@@ -42,7 +42,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
   });
 
   const uniqueSports = Array.from(new Set(events.map((event) => event.sport)));
-  const uniqueLocations = Array.from(new Set(events.map((event) => event.location)));
+  const uniqueLocations = Array.from(
+    new Set(events.map((event) => event.location))
+  );
 
   return (
     <div className="main-page">
@@ -61,7 +63,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
         >
           <option value="">All Sports</option>
           {uniqueSports.map((sport, index) => (
-            <option key={index} value={sport}>{sport}</option>
+            <option key={index} value={sport}>
+              {sport}
+            </option>
           ))}
         </select>
 
