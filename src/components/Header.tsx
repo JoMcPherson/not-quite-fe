@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Authenticator } from '@aws-amplify/ui-react';
-import Logo from "../../public/NotQuiteLogo.png";
+import Logo from "../../public/images/NotQuiteLogo.png";
 
 interface HeaderProps {
   username: string;
