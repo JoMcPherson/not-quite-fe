@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
+import axios from "axios";
 
 interface EventDetailPageProps {
   user: any;
@@ -17,16 +18,21 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
 
   //replace with events number from axios call of event attendees
   const spotsLeft = selectedEvent.maxAttendees - 5;
-
+  const deleteEvent = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:8080/events/${id}`);
+      console.log("Event deleted");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+  };
   return (
     <div className="flex justify-center py-8 px-4">
       <div className="w-full max-w-5xl">
         <h1 className="text-3xl font-bold text-center mb-4">
           {selectedEvent.title}
         </h1>
-        <div
-          className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-        >
+        <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
           <img
             className="object-cover w-full md:w-1/2 h-96 md:h-auto rounded-t-lg md:rounded-l-lg"
             src={selectedEvent.image}
@@ -80,6 +86,14 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                 className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
               >
                 Edit Event
+              </a>
+              <a
+                onClick={() => {
+                  deleteEvent(selectedEvent.id);
+                }}
+                className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+              >
+                Delete Event
               </a>
             </div>
           </div>
