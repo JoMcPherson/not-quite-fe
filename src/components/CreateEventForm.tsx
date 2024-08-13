@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../App.css";
+import { Event } from "../interfaces/Event";
 
 interface EventFormProps {
   sports: string[];
@@ -8,12 +9,17 @@ interface EventFormProps {
 }
 
 const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<
+    Omit<Event, "id" | "createdAt" | "lastUpdated" | "cancelled">
+  >({
     title: "",
+    cognitoUserId: "test",
+    image: "",
     location: "",
     description: "",
     date: "",
     sport: "",
+    maxAttendees: 0,
   });
 
   const handleChange = (
@@ -32,21 +38,24 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
 
     const eventPayload = {
       ...formData,
-      //UPDATE TOKEN DECODE
-      user_id: token,
-      //UPDATE IMAGE URL
-      image: "https://source.unsplash.com/random",
+      //UPDATE WITH TOKEN
+      cognitoUserid: token,
+      image: `/images/${formData.sport.toLowerCase()}.jpg`,
+      //UPDATE WITH IMAGE
       created_at: new Date().toISOString(),
       last_updated: new Date().toISOString(),
       cancelled: false,
     };
-    console.log("event data:", eventPayload);
+
     try {
-      //UPDATE BACKEND URL
-      const response = await axios.post("/api/events", eventPayload);
+      // UPDATE WITH ACTUAL API
+      const response = await axios.post(
+        "http://localhost:8080/events",
+        eventPayload
+      );
       console.log("Event created successfully:", response.data);
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error("Error creating event:", error, eventPayload);
     }
   };
 
@@ -127,6 +136,20 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports, token }) => {
             name="date"
             id="date"
             value={formData.date}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="maxAttendees" className="input-label">
+            Max Attendees
+          </label>
+          <input
+            type="number"
+            name="maxAttendees"
+            id="maxAttendees"
+            value={formData.maxAttendees}
             onChange={handleChange}
             className="input-field"
             required

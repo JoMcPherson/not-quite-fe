@@ -4,21 +4,38 @@ import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
 import { sports } from "./assets/sports";
 import { Authenticator } from "@aws-amplify/ui-react";
+import { Event } from "./interfaces/Event";
+import MainPage from "./components/MainPage";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import EventDetailPage from "./components/EventDetailPage";
 
 function App() {
   const token = localStorage.getItem("token") || "1"; // Replace token from JWT
-  const eventExample = {
-    id: 1,
-    title: "Olympic Swimming Championship",
-    location: "London Aquatic Centre",
-    description:
-      "A thrilling swimming competition featuring top athletes from around the world.",
-    date: "2024-09-15T14:30:00",
-    sport: "Swimming",
-    created_at: "2024-08-01T10:00:00Z",
-    last_updated: "2024-08-05T15:00:00Z",
-    cancelled: false,
-  };
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get<Event[]>(
+          "http://localhost:8080/events"
+        );
+        setEvents(response.data);
+        console.log(events);
+      } catch (err) {
+        setError("Failed to fetch events");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <Authenticator>
@@ -26,19 +43,20 @@ function App() {
         <div className="App">
           <Header />
           <Routes>
+            <Route path="/" element={<MainPage events={events} />} />
             <Route
               path="/create"
               element={<CreateEventForm sports={sports} token={token} />}
             />
             <Route
-              path="/edit"
+              path="/edit/:eventId"
               element={
-                <EditEventForm
-                  event={eventExample}
-                  sports={sports}
-                  token={token}
-                />
+                <EditEventForm events={events} sports={sports} token={token} />
               }
+            />
+            <Route
+              path="/events/:eventId"
+              element={<EventDetailPage events={events} />}
             />
           </Routes>
         </div>
