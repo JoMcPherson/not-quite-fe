@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 
-const Header = () => {
+interface HeaderProps {
+  username: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ username }) => {
   return (
     <header className="header bg-purple-200 p-4 shadow-md">
       <nav className="max-w-4xl mx-auto flex justify-between items-center">
         <h1 className="text-2xl font-bold text-purple-600">
           Not Quite Olympians
         </h1>
+        <h1>Hello {username}</h1>
         <ul className="flex space-x-4">
           <li>
             <Link
