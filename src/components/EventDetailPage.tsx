@@ -24,8 +24,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
         <h1 className="text-3xl font-bold text-center mb-4">
           {selectedEvent.title}
         </h1>
-        <a
-          href="#"
+        <div
           className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
         >
           <img
@@ -84,7 +83,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
               </a>
             </div>
           </div>
-        </a>
+        </div>
       </div>
     </div>
   );

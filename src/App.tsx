@@ -22,7 +22,7 @@ function App() {
           "http://localhost:8080/events"
         );
         setEvents(response.data);
-        console.log(events);
+        // console.log(events);
       } catch (err) {
         setError("Failed to fetch events");
       } finally {
