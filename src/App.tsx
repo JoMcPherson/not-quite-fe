@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
 import { sports } from "./assets/sports";
+import { Authenticator } from "@aws-amplify/ui-react";
 import { Event } from "./interfaces/Event";
 import MainPage from "./components/MainPage";
 import { useEffect, useState } from "react";
@@ -37,28 +38,30 @@ function App() {
   if (error) return <div>{error}</div>;
 
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Routes>
-          <Route path="/" element={<MainPage events={events} />} />
-          <Route
-            path="/create"
-            element={<CreateEventForm sports={sports} token={token} />}
-          />
-          <Route
-            path="/edit/:eventId"
-            element={
-              <EditEventForm events={events} sports={sports} token={token} />
-            }
-          />
-          <Route
-            path="/events/:eventId"
-            element={<EventDetailPage events={events} />}
-          />
-        </Routes>
-      </div>
-    </Router>
+    <Authenticator>
+      <Router>
+        <div className="App">
+          <Header />
+          <Routes>
+            <Route path="/" element={<MainPage events={events} />} />
+            <Route
+              path="/create"
+              element={<CreateEventForm sports={sports} token={token} />}
+            />
+            <Route
+              path="/edit/:eventId"
+              element={
+                <EditEventForm events={events} sports={sports} token={token} />
+              }
+            />
+            <Route
+              path="/events/:eventId"
+              element={<EventDetailPage events={events} />}
+            />
+          </Routes>
+        </div>
+      </Router>
+    </Authenticator>
   );
 }
 
