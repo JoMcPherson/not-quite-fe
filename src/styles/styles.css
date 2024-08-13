@@ -1,0 +1,11 @@
+.margin-left-32 {
+    padding-left: 20%;
+  }
+
+  .select-no-margin {
+    margin: 0;
+  }
+  
+  .label-no-margin {
+    margin: 0;
+  }
