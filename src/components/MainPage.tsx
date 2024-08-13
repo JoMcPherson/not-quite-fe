@@ -49,7 +49,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
       <h1 className="text-center text-3xl font-bold my-8">Olympic Events</h1>
 
       <div className="filter-section mb-8 flex flex-wrap items-center justify-between">
-        <label htmlFor="sport" className="mr-4">Filter by Sport:</label>
+        <label htmlFor="sport" className="mr-4">
+          Filter by Sport:
+        </label>
         <select
           name="sport"
           id="sport"
@@ -63,7 +65,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
           ))}
         </select>
 
-        <label htmlFor="location" className="mr-4">Filter by Location:</label>
+        <label htmlFor="location" className="mr-4">
+          Filter by Location:
+        </label>
         <select
           name="location"
           id="location"
@@ -73,7 +77,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
         >
           <option value="">All Locations</option>
           {uniqueLocations.map((location, index) => (
-            <option key={index} value={location}>{location}</option>
+            <option key={index} value={location}>
+              {location}
+            </option>
           ))}
         </select>
         <form onSubmit={handleFormSubmit} className="relative max-w-md margin-left-32">
@@ -116,7 +122,10 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
       <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-            <div key={event.id} className="event-card p-4 border rounded shadow">
+            <div 
+              key={event.id} 
+              className="event-card p-4 border rounded shadow"
+              >
               <img
                 src={event.image}
                 alt={event.title}
@@ -124,11 +133,22 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
               />
               <h2 className="text-xl font-bold">{event.title}</h2>
               <p>{event.description}</p>
-              <p><strong>Date:</strong> {new Date(event.date).toLocaleString()}</p>
-              <p><strong>Location:</strong> {event.location}</p>
-              <p><strong>Sport:</strong> {event.sport}</p>
-              <p><strong>Max Attendees:</strong> {event.maxAttendees}</p>
-              <p><strong>Status:</strong> {event.cancelled ? "Cancelled" : "Active"}</p>
+              <p>
+                <strong>Date:</strong> {new Date(event.date).toLocaleString()}
+              </p>
+              <p>
+                <strong>Location:</strong> {event.location}
+              </p>
+              <p>
+                <strong>Sport:</strong> {event.sport}
+              </p>
+              <p>
+                <strong>Max Attendees:</strong> {event.maxAttendees}
+              </p>
+              <p>
+                <strong>Status:</strong> 
+                {event.cancelled ? "Cancelled" : "Active"}
+              </p>
               <a
                 href={`/events/${event.id}`}
                 className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
