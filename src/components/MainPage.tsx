@@ -3,10 +3,11 @@ import { Event } from "../interfaces/Event";
 import '../styles/styles.css';
 
 interface MainPageProps {
+  user: any;
   events: Event[];
 }
 
-const MainPage: React.FC<MainPageProps> = ({ events }) => {
+const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
   const [selectedSport, setSelectedSport] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
