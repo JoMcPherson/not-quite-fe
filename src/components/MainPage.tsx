@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Event } from "../interfaces/Event";
+import '../styles/styles.css';
 
 interface MainPageProps {
   events: Event[];
@@ -8,6 +9,15 @@ interface MainPageProps {
 const MainPage: React.FC<MainPageProps> = ({ events }) => {
   const [selectedSport, setSelectedSport] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   const handleSportChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSport(e.target.value);
@@ -18,25 +28,28 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
   };
 
   const filteredEvents = events.filter((event) => {
-    return (
-      (selectedSport === "" || event.sport === selectedSport) &&
-      (selectedLocation === "" || event.location === selectedLocation)
-    );
+    const sport = typeof event.title === 'string' ? event.title : '';
+    const location = typeof event.location === 'string' ? event.location : '';
+    const searchLower = searchTerm.toLowerCase();
+    
+    const matchesSport = selectedSport === "" || sport === selectedSport;
+    const matchesLocation = selectedLocation === "" || location === selectedLocation;
+    const matchesSearchTerm = searchTerm === "" ||
+      sport.toLowerCase().includes(searchLower) ||
+      location.toLowerCase().includes(searchLower);
+  
+    return matchesSport && matchesLocation && matchesSearchTerm;
   });
 
   const uniqueSports = Array.from(new Set(events.map((event) => event.sport)));
-  const uniqueLocations = Array.from(
-    new Set(events.map((event) => event.location))
-  );
+  const uniqueLocations = Array.from(new Set(events.map((event) => event.location)));
 
   return (
     <div className="main-page">
       <h1 className="text-center text-3xl font-bold my-8">Olympic Events</h1>
 
-      <div className="filter-section mb-8 flex flex-wrap items-center">
-        <label htmlFor="sport" className="mr-4">
-          Filter by Sport:
-        </label>
+      <div className="filter-section mb-8 flex flex-wrap items-center justify-between">
+        <label htmlFor="sport" className="mr-4">Filter by Sport:</label>
         <select
           name="sport"
           id="sport"
@@ -46,15 +59,11 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
         >
           <option value="">All Sports</option>
           {uniqueSports.map((sport, index) => (
-            <option key={index} value={sport}>
-              {sport}
-            </option>
+            <option key={index} value={sport}>{sport}</option>
           ))}
         </select>
 
-        <label htmlFor="location" className="mr-4">
-          Filter by Location:
-        </label>
+        <label htmlFor="location" className="mr-4">Filter by Location:</label>
         <select
           name="location"
           id="location"
@@ -64,13 +73,10 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
         >
           <option value="">All Locations</option>
           {uniqueLocations.map((location, index) => (
-            <option key={index} value={location}>
-              {location}
-            </option>
+            <option key={index} value={location}>{location}</option>
           ))}
         </select>
-        {/* Add a form to search for events */}
-        <form className="max-w-md mx-auto flex-grow">
+        <form onSubmit={handleFormSubmit} className="relative max-w-md margin-left-32">
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -98,17 +104,11 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             <input
               type="search"
               id="default-search"
-              className="block w-30 p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              // className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search"
-              required
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
-            <button
-              type="submit"
-              className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Search
-            </button>
           </div>
         </form>
       </div>
@@ -116,10 +116,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
       <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-            <div
-              key={event.id}
-              className="event-card p-4 border rounded shadow"
-            >
+            <div key={event.id} className="event-card p-4 border rounded shadow">
               <img
                 src={event.image}
                 alt={event.title}
@@ -127,22 +124,11 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
               />
               <h2 className="text-xl font-bold">{event.title}</h2>
               <p>{event.description}</p>
-              <p>
-                <strong>Date:</strong> {new Date(event.date).toLocaleString()}
-              </p>
-              <p>
-                <strong>Location:</strong> {event.location}
-              </p>
-              <p>
-                <strong>Sport:</strong> {event.sport}
-              </p>
-              <p>
-                <strong>Max Attendees:</strong> {event.maxAttendees}
-              </p>
-              <p>
-                <strong>Status:</strong>{" "}
-                {event.cancelled ? "Cancelled" : "Active"}
-              </p>
+              <p><strong>Date:</strong> {new Date(event.date).toLocaleString()}</p>
+              <p><strong>Location:</strong> {event.location}</p>
+              <p><strong>Sport:</strong> {event.sport}</p>
+              <p><strong>Max Attendees:</strong> {event.maxAttendees}</p>
+              <p><strong>Status:</strong> {event.cancelled ? "Cancelled" : "Active"}</p>
               <a
                 href={`/events/${event.id}`}
                 className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
