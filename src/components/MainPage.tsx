@@ -50,43 +50,46 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
     <div className="main-page">
       <h1 className="text-center text-3xl font-bold my-8">Olympic Events</h1>
 
-      <div className="filter-section mb-8 flex flex-wrap items-center justify-between">
-        <label htmlFor="sport" className="mr-4">
-          Filter by Sport:
-        </label>
-        <select
-          name="sport"
-          id="sport"
-          value={selectedSport}
-          onChange={handleSportChange}
-          className="mr-8"
-        >
-          <option value="">All Sports</option>
-          {uniqueSports.map((sport, index) => (
-            <option key={index} value={sport}>
-              {sport}
-            </option>
-          ))}
-        </select>
+      <div className="filter-section mb-8 flex items-center justify-between space-x-0">
+        <div className="flex items-center space-x-4">
+          <label htmlFor="sport" className="mr-0">
+            Filter by Sport:
+          </label>
+          <select
+            name="sport"
+            id="sport"
+            value={selectedSport}
+            onChange={handleSportChange}
+            className="mr-8"
+          >
+            <option value="">All Sports</option>
+            {uniqueSports.map((sport, index) => (
+              <option key={index} value={sport}>
+                {sport}
+              </option>
+            ))}
+          </select>
 
-        <label htmlFor="location" className="mr-4">
-          Filter by Location:
-        </label>
-        <select
-          name="location"
-          id="location"
-          value={selectedLocation}
-          onChange={handleLocationChange}
-          className="mr-8"
-        >
-          <option value="">All Locations</option>
-          {uniqueLocations.map((location, index) => (
-            <option key={index} value={location}>
-              {location}
-            </option>
-          ))}
-        </select>
-        <form onSubmit={handleFormSubmit} className="relative max-w-md margin-left-32">
+          <label htmlFor="location" className="mr-4 ml-6">
+            Filter by Location:
+          </label>
+          <select
+            name="location"
+            id="location"
+            value={selectedLocation}
+            onChange={handleLocationChange}
+            className="select-no-margin mr-8"
+          >
+            <option value="">All Locations</option>
+            {uniqueLocations.map((location, index) => (
+              <option key={index} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <form onSubmit={handleFormSubmit} className="flex items-center space-x-2 max-w-md">
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -129,7 +132,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             <div 
               key={event.id} 
               className="event-card p-4 border rounded shadow"
-              >
+            >
               <img
                 src={event.image}
                 alt={event.title}
