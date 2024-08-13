@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Event } from "../interfaces/Event";
 interface MainPageProps {
+  user: any;
   events: Event[];
 }
 
-const MainPage: React.FC<MainPageProps> = ({ events }) => {
+const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
   const [selectedSport, setSelectedSport] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
 

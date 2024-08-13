@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 import { Authenticator } from '@aws-amplify/ui-react';
 import Logo from "../../public/NotQuiteLogo.png";
 
-const Header = () => {
+interface HeaderProps {
+  username: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ username }) => {
   return (
     <header className="header bg-purple-200 p-4 shadow-md">
       <nav className="flex justify-between items-center">
@@ -16,7 +20,10 @@ const Header = () => {
         <h1 className="text-2xl ml-24 font-bold text-purple-600">
           Not Quite Olympians
         </h1>
+
         <ul className="flex space-x-4 mr-3">
+
+
           <li>
             <Link
               to="/create"

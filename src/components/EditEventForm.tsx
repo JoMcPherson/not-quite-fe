@@ -5,20 +5,20 @@ import "../App.css";
 import { Event } from "../interfaces/Event";
 
 interface EditEventFormProps {
+  user: any;
   events: Event[];
   sports: string[];
-  token: string;
 }
 
 const EditEventForm: React.FC<EditEventFormProps> = ({
+  user,
   events,
   sports,
-  token,
 }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const [formData, setFormData] = useState<Omit<Event, "id" | "lastUpdated">>({
     title: "",
-    cognitoUserId: token,
+    cognitoUserId: user.userId,
     location: "",
     description: "",
     date: "",
@@ -69,7 +69,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
 
     const eventPayload: Omit<Event, "id"> = {
       ...formData,
-      cognitoUserId: token,
+      cognitoUserId: user.userId,
       lastUpdated: new Date().toISOString(), // Set lastUpdated to the current date/time
     };
 
