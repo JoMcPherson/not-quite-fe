@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Event } from "../interfaces/Event";
 import '../styles/styles.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface MainPageProps {
   user: any;
@@ -9,8 +11,11 @@ interface MainPageProps {
 
 const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
   const [selectedSport, setSelectedSport] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedState, setSelectedState] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,21 +33,35 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
     setSelectedState(e.target.value);
   };
 
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCity(e.target.value);
+  };
+
+
   const filteredEvents = events.filter((event) => {
+    const eventDate = new Date(event.date);
     const sport = typeof event.sport === 'string' ? event.sport.trim() : '';
+    const city = typeof event.city === 'string' ? event.city.trim() : '';
     const state = typeof event.state === 'string' ? event.state : '';
     const searchLower = searchTerm.toLowerCase();
 
     const matchesSport = selectedSport === "" || sport === selectedSport;
+    const matchesCity = selectedCity === "" || city === selectedCity;
     const matchesState = selectedState === "" || state === selectedState;
     const matchesSearchTerm = searchTerm === "" ||
       sport.toLowerCase().includes(searchLower) ||
-      state.toLowerCase().includes(searchLower);
+      state.toLowerCase().includes(searchLower) ||
+      city.toLowerCase().includes(searchLower);
 
-    return matchesSport && matchesState && matchesSearchTerm;
+    const matchesDateRange =
+      (!startDate || eventDate >= new Date(startDate.setHours(0, 0, 0, 0))) &&
+      (!endDate || eventDate <= new Date(endDate.setHours(23, 59, 59, 999)));
+
+    return matchesSport && matchesCity && matchesState && matchesSearchTerm && matchesDateRange;
   });
 
   const uniqueSports = Array.from(new Set(events.map((event) => event.sport)));
+  const uniqueCities = Array.from(new Set(events.map((event) => event.city)));
   const uniqueStates = Array.from(
     new Set(events.map((event) => event.state))
   );
@@ -88,6 +107,38 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
               </option>
             ))}
           </select>
+
+          <label htmlFor="state" className="mr-4 ml-6">
+            Filter by City:
+          </label>
+          <select
+            name="city"
+            id="city"
+            value={selectedCity}
+            onChange={handleCityChange}
+            className="select-no-margin mr-8"
+          >
+            <option value="">All Cities</option>
+            {uniqueCities.map((city, index) => (
+              <option key={index} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+
+          <label htmlFor="start-date" className="mr-4">Start Date:</label>
+          <DatePicker
+            selected={startDate}
+            onChange={(date: Date | null) => setStartDate(date)}
+            className="mr-4"
+          />
+
+          <label htmlFor="end-date" className="mr-4">End Date:</label>
+          <DatePicker
+            selected={endDate}
+            onChange={(date: Date | null) => setEndDate(date)}
+            className="mr-4"
+          />
         </div>
 
         <form onSubmit={handleFormSubmit} className="flex items-center space-x-2 max-w-md">
