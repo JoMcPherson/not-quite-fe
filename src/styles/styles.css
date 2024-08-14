@@ -9,3 +9,12 @@
   .label-no-margin {
     margin: 0;
   }
+
+  header {
+    width: 100%;
+    overflow: hidden; /* Avoids content spilling out */
+  }
+  
+  nav {
+    box-sizing: border-box; /* Ensures padding and borders are included in width/height calculations */
+  }

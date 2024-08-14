@@ -50,8 +50,7 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
   return (
     <div className="main-page">
       <h1 className="text-center text-3xl font-bold my-8">Olympic Events</h1>
-
-      <div className="filter-section mb-8 flex items-center justify-between space-x-0">
+      <div className="hidden md:flex filter-section mb-8 flex items-center justify-between space-x-0">
         <div className="flex items-center space-x-4">
           <label htmlFor="sport" className="mr-0">
             Filter by Sport:
