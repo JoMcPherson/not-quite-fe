@@ -3,6 +3,7 @@ import { Event } from "../interfaces/Event";
 import "../styles/styles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "../App.css";
 
 interface MainPageProps {
   user: any;

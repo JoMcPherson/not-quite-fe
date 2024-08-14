@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
+import "../App.css";
 
 interface EditEventFormProps {
   user: any;
