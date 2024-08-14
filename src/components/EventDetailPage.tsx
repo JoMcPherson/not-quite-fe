@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import axios from "axios";
+import "../App.css";
 
 interface EventDetailPageProps {
   user: any;

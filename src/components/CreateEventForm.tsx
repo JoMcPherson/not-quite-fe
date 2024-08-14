@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Event } from "../interfaces/Event";
-
+import "../App.css";
 interface EventFormProps {
   user: any;
   sports: string[];
