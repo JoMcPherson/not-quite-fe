@@ -22,8 +22,6 @@ function App() {
           "http://localhost:8080/events"
         );
         setEvents(response.data);
-        console.log("events" + response.data);
-        console.log(events);
       } catch (err) {
         setError("Failed to fetch events");
       } finally {
@@ -60,7 +58,7 @@ function App() {
               />
               <Route
                 path="/events/:eventId"
-                element={<EventDetailPage events={events} />}
+                element={<EventDetailPage user={user} events={events} />}
               />
             </Routes>
           </div>
