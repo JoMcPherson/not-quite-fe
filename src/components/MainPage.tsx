@@ -73,7 +73,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
 
   return (
     <div className="main-page">
-      <h1 className="text-center text-3xl font-bold my-8">Olympic Events</h1>
+      <h1 className="text-center text-3xl font-bold my-8 headline">
+        Olympic Events
+      </h1>
       <div className="filter-section mb-8 p-4 bg-blue-100 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="flex flex-col">
           <label htmlFor="sport" className="text-sm font-medium mb-1">
@@ -158,10 +160,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
         </div>
 
         <form onSubmit={handleFormSubmit} className="flex flex-col">
-          <label
-            htmlFor="default-search"
-            className="text-sm font-medium mb-1"
-          >
+          <label htmlFor="default-search" className="text-sm font-medium mb-1">
             Search
           </label>
           <div className="relative">
@@ -221,7 +220,8 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
                 <strong>Max Attendees:</strong> {event.maxAttendees}
               </p>
               <p>
-                <strong>Status:</strong> {event.cancelled ? "Cancelled" : "Active"}
+                <strong>Status:</strong>{" "}
+                {event.cancelled ? "Cancelled" : "Active"}
               </p>
               <a
                 href={`/events/${event.id}`}

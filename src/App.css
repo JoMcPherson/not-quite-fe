@@ -1,12 +1,55 @@
+@font-face {
+  font-family: "OlympicSans";
+  src: url("./assets/fonts/OlympicSans-Medium.woff2") format("woff2"),
+    url("./assets/fonts/OlympicSans-Medium.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OlympicHeadline";
+  src: url("./assets/fonts/OlympicHeadline-Regular.woff") format("woff2"),
+    url("./assets/fonts/OlympicHeadline-Regular.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 #root {
+  font-family: "OlympicSans", sans-serif;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+.headline {
+  font-family: "OlympicHeadline", sans-serif;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/background1.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Adjust the color and opacity as needed */
+  z-index: -1;
 }
 
 .logo {
