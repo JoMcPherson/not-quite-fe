@@ -14,7 +14,10 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
     title: "",
     cognitoUserId: user.userId,
     image: "",
-    location: "",
+    state: "",
+    city: "",
+    zip: "",
+    street: "",
     description: "",
     date: "",
     sport: "",
@@ -99,7 +102,10 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
         title: "",
         cognitoUserId: "test",
         image: "",
-        location: "",
+        state: "",
+        city: "",
+        zip: "",
+        street: "",
         description: "",
         date: "",
         sport: "",
@@ -152,14 +158,56 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="location" className="input-label">
-            Location
+          <label htmlFor="state" className="input-label">
+            State
           </label>
           <input
             type="text"
-            name="location"
-            id="location"
-            value={formData.location}
+            name="state"
+            id="state"
+            value={formData.state}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="city" className="input-label">
+            City
+          </label>
+          <input
+            type="text"
+            name="city"
+            id="city"
+            value={formData.state}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="zip" className="input-label">
+            Zip
+          </label>
+          <input
+            type="text"
+            name="zip"
+            id="zip"
+            value={formData.state}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="street" className="input-label">
+            Street
+          </label>
+          <input
+            type="text"
+            name="street"
+            id="street"
+            value={formData.state}
             onChange={handleChange}
             className="input-field"
             required
