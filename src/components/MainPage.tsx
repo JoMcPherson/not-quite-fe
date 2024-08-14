@@ -54,8 +54,8 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
       city.toLowerCase().includes(searchLower);
 
     const matchesDateRange =
-      (!startDate || eventDate >= new Date(startDate.setHours(0, 0, 0, 0))) &&
-      (!endDate || eventDate <= new Date(endDate.setHours(23, 59, 59, 999)));
+      (!startDate || eventDate >= startDate) &&
+      (!endDate || eventDate <= endDate);
 
     return (
       matchesSport &&
@@ -73,9 +73,9 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
   return (
     <div className="main-page">
       <h1 className="text-center text-3xl font-bold my-8">Olympic Events</h1>
-      <div className="hidden md:flex filter-section mb-8 flex items-center justify-between space-x-0">
-        <div className="flex items-center space-x-4">
-          <label htmlFor="sport" className="mr-0">
+      <div className="filter-section mb-8 p-4 bg-blue-100 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex flex-col">
+          <label htmlFor="sport" className="text-sm font-medium mb-1">
             Filter by Sport:
           </label>
           <select
@@ -83,7 +83,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             id="sport"
             value={selectedSport}
             onChange={handleSportChange}
-            className="mr-8"
+            className="p-2 border border-gray-300 rounded"
           >
             <option value="">All Sports</option>
             {uniqueSports.map((sport, index) => (
@@ -92,8 +92,10 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
               </option>
             ))}
           </select>
+        </div>
 
-          <label htmlFor="state" className="mr-4 ml-6">
+        <div className="flex flex-col">
+          <label htmlFor="state" className="text-sm font-medium mb-1">
             Filter by State:
           </label>
           <select
@@ -101,7 +103,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             id="state"
             value={selectedState}
             onChange={handleStateChange}
-            className="select-no-margin mr-8"
+            className="p-2 border border-gray-300 rounded"
           >
             <option value="">All States</option>
             {uniqueStates.map((state, index) => (
@@ -110,8 +112,10 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
               </option>
             ))}
           </select>
+        </div>
 
-          <label htmlFor="state" className="mr-4 ml-6">
+        <div className="flex flex-col">
+          <label htmlFor="city" className="text-sm font-medium mb-1">
             Filter by City:
           </label>
           <select
@@ -119,7 +123,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             id="city"
             value={selectedCity}
             onChange={handleCityChange}
-            className="select-no-margin mr-8"
+            className="p-2 border border-gray-300 rounded"
           >
             <option value="">All Cities</option>
             {uniqueCities.map((city, index) => (
@@ -128,40 +132,41 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
               </option>
             ))}
           </select>
+        </div>
 
-          <label htmlFor="start-date" className="mr-4">
+        <div className="flex flex-col">
+          <label htmlFor="start-date" className="text-sm font-medium mb-1">
             Start Date:
           </label>
           <DatePicker
             selected={startDate}
             onChange={(date: Date | null) => setStartDate(date)}
-            className="mr-4"
+            className="p-2 border border-gray-300 rounded"
           />
+        </div>
 
-          <label htmlFor="end-date" className="mr-4">
+        <div className="flex flex-col">
+          <label htmlFor="end-date" className="text-sm font-medium mb-1">
             End Date:
           </label>
           <DatePicker
             selected={endDate}
             onChange={(date: Date | null) => setEndDate(date)}
-            className="mr-4"
+            className="p-2 border border-gray-300 rounded"
           />
         </div>
 
-        <form
-          onSubmit={handleFormSubmit}
-          className="flex items-center space-x-2 max-w-md"
-        >
+        <form onSubmit={handleFormSubmit} className="flex flex-col">
           <label
             htmlFor="default-search"
-            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            className="text-sm font-medium mb-1"
           >
             Search
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                className="w-4 h-4 text-gray-500"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -179,7 +184,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             <input
               type="search"
               id="default-search"
-              className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Search"
               value={searchTerm}
               onChange={handleSearchChange}
@@ -215,8 +220,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
                 <strong>Max Attendees:</strong> {event.maxAttendees}
               </p>
               <p>
-                <strong>Status:</strong>
-                {event.cancelled ? "Cancelled" : "Active"}
+                <strong>Status:</strong> {event.cancelled ? "Cancelled" : "Active"}
               </p>
               <a
                 href={`/events/${event.id}`}
