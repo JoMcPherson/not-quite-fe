@@ -2,7 +2,10 @@ export interface Event {
   id: number;
   cognitoUserId: string;
   title: string;
-  location: string;
+  city: string;
+  state: string;
+  zip: string;
+  street: string;
   image: string;
   description: string;
   date: string;
