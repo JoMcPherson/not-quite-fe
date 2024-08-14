@@ -19,7 +19,10 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
   const [formData, setFormData] = useState<Omit<Event, "id" | "lastUpdated">>({
     title: "",
     cognitoUserId: user.userId,
-    location: "",
+    street: "",
+    state: "",
+    city: "",
+    zip: "",
     description: "",
     date: "",
     sport: "",
@@ -39,7 +42,10 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
         setFormData({
           title: selectedEvent.title,
           cognitoUserId: selectedEvent.cognitoUserId,
-          location: selectedEvent.location,
+          street: selectedEvent.street,
+          state: selectedEvent.state,
+          city: selectedEvent.city,
+          zip: selectedEvent.zip,
           description: selectedEvent.description,
           date: selectedEvent.date,
           sport: selectedEvent.sport,
@@ -122,14 +128,42 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="location" className="input-label">
-            Location
+          <label htmlFor="state" className="input-label">
+            State
           </label>
           <input
             type="text"
-            name="location"
-            id="location"
-            value={formData.location}
+            name="state"
+            id="state"
+            value={formData.state}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="city" className="input-label">
+            City
+          </label>
+          <input
+            type="text"
+            name="city"
+            id="city"
+            value={formData.city}
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="zip" className="input-label">
+            Zip
+          </label>
+          <input
+            type="text"
+            name="zip"
+            id="zip"
+            value={formData.zip}
             onChange={handleChange}
             className="input-field"
             required
