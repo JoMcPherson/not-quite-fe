@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { Event } from "../interfaces/Event";
-import '../styles/styles.css';
+import "../styles/styles.css";
 
 interface MainPageProps {
   user: any;
   events: Event[];
 }
 
-const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
+const MainPage: React.FC<MainPageProps> = ({ events }) => {
   const [selectedSport, setSelectedSport] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,20 +29,23 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
   };
 
   const filteredEvents = events.filter((event) => {
-    const sport = typeof event.title === 'string' ? event.title : '';
-    const location = typeof event.location === 'string' ? event.location : '';
+    const sport = typeof event.title === "string" ? event.title : "";
+    const location = typeof event.location === "string" ? event.location : "";
     const searchLower = searchTerm.toLowerCase();
-    
+
     const matchesSport = selectedSport === "" || sport === selectedSport;
-    const matchesLocation = selectedLocation === "" || location === selectedLocation;
-    const matchesSearchTerm = searchTerm === "" ||
+    const matchesLocation =
+      selectedLocation === "" || location === selectedLocation;
+    const matchesSearchTerm =
+      searchTerm === "" ||
       sport.toLowerCase().includes(searchLower) ||
       location.toLowerCase().includes(searchLower);
-  
+
     return matchesSport && matchesLocation && matchesSearchTerm;
   });
 
   const uniqueSports = Array.from(new Set(events.map((event) => event.sport)));
+
   const uniqueLocations = Array.from(
     new Set(events.map((event) => event.location))
   );
@@ -90,7 +93,10 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
           </select>
         </div>
 
-        <form onSubmit={handleFormSubmit} className="flex items-center space-x-2 max-w-md">
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex items-center space-x-2 max-w-md"
+        >
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -130,8 +136,8 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
       <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-            <div 
-              key={event.id} 
+            <div
+              key={event.id}
               className="event-card p-4 border rounded shadow"
             >
               <img
@@ -154,7 +160,7 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
                 <strong>Max Attendees:</strong> {event.maxAttendees}
               </p>
               <p>
-                <strong>Status:</strong> 
+                <strong>Status:</strong>
                 {event.cancelled ? "Cancelled" : "Active"}
               </p>
               <a

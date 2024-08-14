@@ -4,11 +4,10 @@ import { Event } from "../interfaces/Event";
 import axios from "axios";
 
 interface EventDetailPageProps {
-  user: any;
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
 

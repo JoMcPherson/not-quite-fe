@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../App.css";
 import { Event } from "../interfaces/Event";
 
 interface EventFormProps {
