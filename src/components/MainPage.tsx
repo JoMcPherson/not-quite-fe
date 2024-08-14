@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Event } from "../interfaces/Event";
-import '../styles/styles.css';
+import "../styles/styles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -9,7 +9,7 @@ interface MainPageProps {
   events: Event[];
 }
 
-const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
+const MainPage: React.FC<MainPageProps> = ({ events }) => {
   const [selectedSport, setSelectedSport] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedState, setSelectedState] = useState<string>("");
@@ -37,18 +37,18 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
     setSelectedCity(e.target.value);
   };
 
-
   const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.date);
-    const sport = typeof event.sport === 'string' ? event.sport.trim() : '';
-    const city = typeof event.city === 'string' ? event.city.trim() : '';
-    const state = typeof event.state === 'string' ? event.state : '';
+    const sport = typeof event.sport === "string" ? event.sport.trim() : "";
+    const city = typeof event.city === "string" ? event.city.trim() : "";
+    const state = typeof event.state === "string" ? event.state : "";
     const searchLower = searchTerm.toLowerCase();
 
     const matchesSport = selectedSport === "" || sport === selectedSport;
     const matchesCity = selectedCity === "" || city === selectedCity;
     const matchesState = selectedState === "" || state === selectedState;
-    const matchesSearchTerm = searchTerm === "" ||
+    const matchesSearchTerm =
+      searchTerm === "" ||
       sport.toLowerCase().includes(searchLower) ||
       state.toLowerCase().includes(searchLower) ||
       city.toLowerCase().includes(searchLower);
@@ -57,14 +57,18 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
       (!startDate || eventDate >= new Date(startDate.setHours(0, 0, 0, 0))) &&
       (!endDate || eventDate <= new Date(endDate.setHours(23, 59, 59, 999)));
 
-    return matchesSport && matchesCity && matchesState && matchesSearchTerm && matchesDateRange;
+    return (
+      matchesSport &&
+      matchesCity &&
+      matchesState &&
+      matchesSearchTerm &&
+      matchesDateRange
+    );
   });
 
   const uniqueSports = Array.from(new Set(events.map((event) => event.sport)));
   const uniqueCities = Array.from(new Set(events.map((event) => event.city)));
-  const uniqueStates = Array.from(
-    new Set(events.map((event) => event.state))
-  );
+  const uniqueStates = Array.from(new Set(events.map((event) => event.state)));
 
   return (
     <div className="main-page">
@@ -125,14 +129,18 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
             ))}
           </select>
 
-          <label htmlFor="start-date" className="mr-4">Start Date:</label>
+          <label htmlFor="start-date" className="mr-4">
+            Start Date:
+          </label>
           <DatePicker
             selected={startDate}
             onChange={(date: Date | null) => setStartDate(date)}
             className="mr-4"
           />
 
-          <label htmlFor="end-date" className="mr-4">End Date:</label>
+          <label htmlFor="end-date" className="mr-4">
+            End Date:
+          </label>
           <DatePicker
             selected={endDate}
             onChange={(date: Date | null) => setEndDate(date)}
@@ -140,7 +148,10 @@ const MainPage: React.FC<MainPageProps> = ({ user, events }) => {
           />
         </div>
 
-        <form onSubmit={handleFormSubmit} className="flex items-center space-x-2 max-w-md">
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex items-center space-x-2 max-w-md"
+        >
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
