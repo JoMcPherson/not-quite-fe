@@ -10,7 +10,7 @@ interface EventDetailPageProps {
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
 
@@ -19,7 +19,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const attendEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-
+    console.log();
     axios
       .post(
         `http://localhost:8080/event_attendees/${eventId}`,
