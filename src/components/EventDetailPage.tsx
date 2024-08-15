@@ -80,12 +80,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   };
 
   return (
-    // <div>
-    
-      // <div className="flex flex-col min-h-screen w-full max-w-5xl">
-      // <div className="flex justify-center py-8 px-4">
-      //   <div className="w-full max-w-5xl">
-      //     <h1 className="text-3xl font-bold text-center mb-4">
       <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
       <div className="flex justify-center py-8 px-4">
         <div className="w-full">
@@ -163,7 +157,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
         </div>
       </div>
       </div>
-    // </div>
   );
 };
 
