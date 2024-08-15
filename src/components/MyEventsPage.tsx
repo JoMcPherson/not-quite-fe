@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Event } from '../interfaces/Event';
 import '../App.css';
+import { fetchAuthSession } from "aws-amplify/auth";
 
 interface MyEventsProps {
     user: any;
@@ -12,14 +13,25 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
     const [signedUpEvents, setSignedUpEvents] = useState<Event[]>([]);
 
     useEffect(() => {
-        const fetchCreatedEvents = async () => {
-            try {
-                const response = await axios.get(`/events/createdBy/${user.userId}`);
-                setCreatedEvents(response.data);
-            } catch (error) {
-                console.error('Error fetching created events:', error);
-            }
-        };
+
+
+        const fetchCreatedEvents =
+            async () => {
+                const session = await fetchAuthSession();
+                const token = session?.tokens?.idToken;
+                try {
+                    const response = await axios.get(
+                        "http://localhost:8080/events/my_events",
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                            },
+                        });
+                    setCreatedEvents(response.data);
+                } catch (error) {
+                    console.error('Error fetching created events:', error);
+                }
+            };
 
         const fetchSignedUpEvents = async () => {
             try {
@@ -57,7 +69,7 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
             </div>
             <div className="events-section">
                 <h2 className="text-2xl font-bold mb-4">Signed Up Events</h2>
-                {signedUpEvents.length > 0 ? (
+                {/* {signedUpEvents.length > 0 ? (
                     <ul className="events-list">
                         {signedUpEvents.map(event => (
                             <li key={event.id} className="event-item">
@@ -71,7 +83,7 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
                     </ul>
                 ) : (
                     <p>No events signed up for yet.</p>
-                )}
+                )} */}
             </div>
         </div>
     );
