@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import axios from "axios";
 import "../App.css";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 interface EventDetailPageProps {
   user: any;
@@ -15,11 +16,19 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
 
   const [isAttending, setIsAttending] = useState(false);
 
-  const attendEvent = () => {
+  const attendEvent = async () => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
     axios
-      .post(`http://localhost:8080/event_attendees/${eventId}`, {
-        cognitoUserId: user.userId,
-      })
+      .post(
+        `http://localhost:8080/event_attendees/${eventId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then(() => {
         setIsAttending(true);
       })
