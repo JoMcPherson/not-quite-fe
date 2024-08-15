@@ -9,6 +9,7 @@ import MainPage from "./components/MainPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import EventDetailPage from "./components/EventDetailPage";
+import MyEventsPage from "./components/MyEventsPage";
 
 function App() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -59,6 +60,10 @@ function App() {
               <Route
                 path="/events/:eventId"
                 element={<EventDetailPage user={user} events={events} />}
+              />
+              <Route
+                path="/myevents"
+                element={<MyEventsPage user={user} />}
               />
             </Routes>
           </div>
