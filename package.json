@@ -21,6 +21,7 @@
     ]
   },
   "dependencies": {
+    "@aws-amplify/auth": "^6.3.13",
     "@aws-amplify/ui-react": "^6.1.14",
     "@babel/preset-typescript": "^7.24.7",
     "@types/react-datepicker": "^7.0.0",
