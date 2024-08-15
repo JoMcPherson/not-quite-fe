@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Event } from "../interfaces/Event";
-import '../styles/createEvent.css';
+import "../styles/createEvent.css";
 import "../App.css";
 
 interface EventFormProps {
-  user: any;
   sports: string[];
 }
 
-const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
+const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
   const [formData, setFormData] = useState<
-    Omit<Event, "id" | "createdAt" | "lastUpdated" | "cancelled">
+    Omit<
+      Event,
+      "id" | "createdAt" | "lastUpdated" | "cancelled" | "cognitoUserId"
+    >
   >({
     title: "",
-    cognitoUserId: user.userId,
     image: "",
     state: "",
     city: "",
@@ -84,7 +85,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
 
     const eventPayload = {
       ...formData,
-      cognitoUserid: user.userId,
       image: `/images/${imagepath}.jpeg`,
       created_at: new Date().toISOString(),
       last_updated: new Date().toISOString(),
@@ -102,7 +102,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
       setTimeout(() => setShowSuccessBanner(false), 10000);
       setFormData({
         title: "",
-        cognitoUserId: "test",
         image: "",
         state: "",
         city: "",
@@ -244,7 +243,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
         <button type="submit" className="submit-button">
           Create Event
         </button>
-      </form >
+      </form>
     </>
   );
 };

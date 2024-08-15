@@ -48,7 +48,7 @@ function App() {
               />
               <Route
                 path="/create"
-                element={<CreateEventForm user={user} sports={sports} />}
+                element={<CreateEventForm sports={sports} />}
               />
               <Route
                 path="/edit/:eventId"
