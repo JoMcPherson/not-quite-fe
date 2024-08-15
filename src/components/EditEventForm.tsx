@@ -82,7 +82,6 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
       lastUpdated: new Date().toISOString(), // Set lastUpdated to the current date/time
     };
 
-    console.log(eventPayload + "eventPayload");
     try {
       const response = await axios.put(
         `http://localhost:8080/events/${eventId}`,

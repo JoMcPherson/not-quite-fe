@@ -19,6 +19,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const attendEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
+
     axios
       .post(
         `http://localhost:8080/event_attendees/${eventId}`,
@@ -37,11 +38,15 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
       });
   };
 
-  const withdrawEvent = () => {
+  const withdrawEvent = async () => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
+
     axios
+
       .delete(`http://localhost:8080/event_attendees/events/${eventId}`, {
-        params: {
-          cognitoUserId: user.userId,
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
@@ -60,8 +65,14 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const spotsLeft = selectedEvent.maxAttendees - 5;
 
   const deleteEvent = async (id: number) => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
     try {
-      await axios.delete(`http://localhost:8080/events/${id}`);
+      await axios.delete(`http://localhost:8080/events/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Event deleted");
     } catch (error) {
       console.error("Error deleting event:", error);
