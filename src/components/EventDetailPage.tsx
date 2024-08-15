@@ -3,23 +3,33 @@ import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import axios from "axios";
 import "../App.css";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 interface EventDetailPageProps {
   user: any;
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
 
   const [isAttending, setIsAttending] = useState(false);
 
-  const attendEvent = () => {
+  const attendEvent = async () => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
+    console.log();
     axios
-      .post(`http://localhost:8080/event_attendees/${eventId}`, {
-        cognitoUserId: user.userId,
-      })
+      .post(
+        `http://localhost:8080/event_attendees/${eventId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then(() => {
         setIsAttending(true);
       })
@@ -28,11 +38,15 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
       });
   };
 
-  const withdrawEvent = () => {
+  const withdrawEvent = async () => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
+
     axios
+
       .delete(`http://localhost:8080/event_attendees/events/${eventId}`, {
-        params: {
-          cognitoUserId: user.userId,
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
@@ -51,8 +65,14 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const spotsLeft = selectedEvent.maxAttendees - 5;
 
   const deleteEvent = async (id: number) => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
     try {
-      await axios.delete(`http://localhost:8080/events/${id}`);
+      await axios.delete(`http://localhost:8080/events/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Event deleted");
     } catch (error) {
       console.error("Error deleting event:", error);

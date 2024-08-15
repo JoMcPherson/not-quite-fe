@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import "../App.css";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 interface EditEventFormProps {
   user: any;
@@ -72,6 +73,8 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
 
     const eventPayload: Omit<Event, "id"> = {
       ...formData,
@@ -80,7 +83,15 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
     };
 
     try {
-      const response = await axios.put(`/events/${eventId}`, eventPayload);
+      const response = await axios.put(
+        `http://localhost:8080/events/${eventId}`,
+        eventPayload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
       console.log("Event updated successfully:", response.data);
     } catch (error) {
       console.error("Error updating event:", error);
