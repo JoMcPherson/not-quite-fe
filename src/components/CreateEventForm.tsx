@@ -3,6 +3,7 @@ import axios from "axios";
 import { Event } from "../interfaces/Event";
 import "../styles/createEvent.css";
 import "../App.css";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 interface EventFormProps {
   sports: string[];
@@ -27,8 +28,16 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
     maxAttendees: 0,
   });
 
-  const [showSuccessBanner, setShowSuccessBanner] = useState<Boolean>(false);
-  const [createdEventId, setCreatedEventId] = useState<Number>(0);
+  const [showSuccessBanner, setShowSuccessBanner] = useState<boolean>(false);
+  const [createdEventId, setCreatedEventId] = useState<number>(0);
+
+  const getCognitoToken = () => {
+    const token = localStorage.getItem("cognitoToken");
+    if (!token) {
+      throw new Error("No token found");
+    }
+    return token;
+  };
 
   const successBanner = (
     <div
@@ -73,30 +82,39 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, type } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: type === "number" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const imagepath = formData.sport.toLowerCase().replace(/ /g, "_"); // Removed the extra closing brace
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
+    console.log(token + "token");
+
+    const imagepath = formData.sport.toLowerCase().replace(/ /g, "_");
 
     const eventPayload = {
       ...formData,
       image: `/images/${imagepath}.jpeg`,
-      created_at: new Date().toISOString(),
-      last_updated: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
       cancelled: false,
     };
 
     try {
       const response = await axios.post(
         "http://localhost:8080/events",
-        eventPayload
+        eventPayload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
       );
-      console.log("Event created successfully:", response.data);
       setCreatedEventId(response.data.id);
       setShowSuccessBanner(true);
       setTimeout(() => setShowSuccessBanner(false), 10000);
@@ -113,13 +131,13 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
         maxAttendees: 0,
       });
     } catch (error) {
-      console.error("Error creating event:", error, eventPayload);
+      console.error("Error creating event:", error);
     }
   };
 
   return (
     <>
-      {showSuccessBanner ? successBanner : <></>}
+      {showSuccessBanner && successBanner}
       <h1 className="text-center text-3xl font-bold my-8">Create New Event</h1>
       <form onSubmit={handleSubmit} className="basic-form">
         <div className="mb-4 flex-field">
@@ -179,8 +197,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
         </div>
         <div className="mb-4">
           <input
-            type="text"
-            inputMode="numeric"
+            type="number"
             name="maxAttendees"
             id="maxAttendees"
             value={formData.maxAttendees}
