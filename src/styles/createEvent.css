@@ -1,0 +1,74 @@
+.basic-form {
+    max-width: 1200px;
+    margin: 0 auto;
+    /* Center the form horizontally */
+    padding: 20px;
+    background-color: #e3f2fd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.address {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Three equal columns */
+    gap: 16px;
+}
+
+.street {
+    grid-column: span 3;
+    /* Span across all three columns */
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #00796b;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #c34bbf;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.input-field:disabled {
+    color: #888;
+    /* Grey text */
+    border-color: #ddd;
+    /* Light grey border */
+}
+
+.mb-4 {
+    margin-bottom: 16px;
+}
+
+.submit-button {
+    display: block;
+    background-color: #00796b;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin: 0 auto;
+    /* Center the button horizontally */
+}
+
+.submit-button:hover {
+    background-color: #004d40;
+}
+
+.select-field {
+    color: #888;
+}
+
+.select-field:not(:invalid) {
+    color: #000;
+}
