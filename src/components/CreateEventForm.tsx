@@ -31,14 +31,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
   const [showSuccessBanner, setShowSuccessBanner] = useState<boolean>(false);
   const [createdEventId, setCreatedEventId] = useState<number>(0);
 
-  const getCognitoToken = () => {
-    const token = localStorage.getItem("cognitoToken");
-    if (!token) {
-      throw new Error("No token found");
-    }
-    return token;
-  };
-
   const successBanner = (
     <div
       className="flex items-center p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
@@ -93,7 +85,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
     e.preventDefault();
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-    console.log(token + "token");
 
     const imagepath = formData.sport.toLowerCase().replace(/ /g, "_");
 
