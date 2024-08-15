@@ -60,14 +60,19 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   };
 
   return (
-    <div>
-      <div className="flex flex-col min-h-screen w-full max-w-5xl">
+    // <div>
+    
+      // <div className="flex flex-col min-h-screen w-full max-w-5xl">
+      // <div className="flex justify-center py-8 px-4">
+      //   <div className="w-full max-w-5xl">
+      //     <h1 className="text-3xl font-bold text-center mb-4">
+      <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
       <div className="flex justify-center py-8 px-4">
-        <div className="w-full max-w-5xl">
+        <div className="w-full">
           <h1 className="text-3xl font-bold text-center mb-4">
             {selectedEvent.title}
           </h1>
-          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto">
             <img
               className="object-cover w-full md:w-1/2 h-96 md:h-auto rounded-t-lg md:rounded-l-lg"
               src={selectedEvent.image}
@@ -138,7 +143,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
         </div>
       </div>
       </div>
-    </div>
+    // </div>
   );
 };
 
