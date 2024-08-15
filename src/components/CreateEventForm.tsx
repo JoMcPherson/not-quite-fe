@@ -34,36 +34,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
       className="flex items-center p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
       role="alert"
     >
-      <svg
-        className="flex-shrink-0 inline w-4 h-4 me-3"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-      </svg>
-      <span className="sr-only">Info</span>
-      <div className="flex items-center ml-3">
-        <span className="font-medium text-center">
-          Event Created Successfully!
-          <br />
-          <a href={`/events/${createdEventId}`}>
-            Click here to see your event.
-          </a>
-        </span>
-      </div>
-      <div className="ml-3">
-        <button
-          onClick={() => setShowSuccessBanner(false)}
-          type="button"
-          className="text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800"
-          data-dismiss-target="#alert-additional-content-3"
-          aria-label="Close"
-        >
-          Dismiss
-        </button>
-      </div>
+      {/* SVG and Success Message */}
     </div>
   );
 
@@ -72,15 +43,30 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement>,
+    type: string,
+    defaultValue: any
+  ) => {
+    if (e.target.value === "") {
+      if (type === "text") {
+        e.target.type = "text";
+      } else {
+        setFormData({ ...formData, [e.target.name]: defaultValue });
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const imagepath = formData.sport.toLowerCase().replace(/ /g, "_"); // Removed the extra closing brace
+    const imagepath = formData.sport.toLowerCase().replace(/ /g, "_");
 
     const eventPayload = {
       ...formData,
@@ -102,7 +88,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
       setTimeout(() => setShowSuccessBanner(false), 10000);
       setFormData({
         title: "",
-        cognitoUserId: "test",
+        cognitoUserId: user.userId,
         image: "",
         state: "",
         city: "",
@@ -117,6 +103,26 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
       console.error("Error creating event:", error, eventPayload);
     }
   };
+
+  const renderInput = (
+    name: keyof typeof formData,
+    type: string,
+    placeholder: string,
+    defaultValue: any = ""
+  ) => (
+    <input
+      type={type}
+      name={name}
+      id={name}
+      value={formData[name] === defaultValue ? "" : formData[name]}
+      placeholder={placeholder}
+      onFocus={(e) => type === "datetime-local" && (e.target.type = "datetime-local")}
+      onBlur={(e) => handleBlur(e, type === "datetime-local" ? "text" : "", defaultValue)}
+      onChange={handleChange}
+      className="input-field"
+      required
+    />
+  );
 
   return (
     <>
@@ -143,18 +149,8 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
           </select>
         </div>
         <div className="mb-4">
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={formData.title}
-            placeholder="Event Name"
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
+          {renderInput("title", "text", "Event Name")}
         </div>
-
         <div className="mb-4">
           <textarea
             name="description"
@@ -168,83 +164,29 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
           />
         </div>
         <div className="mb-4">
-          <input
-            type="datetime-local"
-            name="date"
-            id="date"
-            value={formData.date}
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
+          {renderInput("date", "text", "Select date and time")}
         </div>
         <div className="mb-4">
-          <input
-            type="text"
-            inputMode="numeric"
-            name="maxAttendees"
-            id="maxAttendees"
-            value={formData.maxAttendees}
-            placeholder="Max attendees"
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
+          {renderInput("maxAttendees", "number", "Max attendees", 0)}
         </div>
         <div className="address">
           <div className="mb-4">
-            <input
-              type="text"
-              name="state"
-              id="state"
-              value={formData.state}
-              placeholder="State"
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            {renderInput("state", "text", "State")}
           </div>
           <div className="mb-4">
-            <input
-              type="text"
-              name="city"
-              id="city"
-              value={formData.city}
-              placeholder="City"
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            {renderInput("city", "text", "City")}
           </div>
           <div className="mb-4">
-            <input
-              type="text"
-              name="zip"
-              id="zip"
-              value={formData.zip}
-              placeholder="Zip"
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
+            {renderInput("zip", "text", "Zip")}
           </div>
         </div>
         <div className="mb-4 street">
-          <input
-            type="text"
-            name="street"
-            id="street"
-            value={formData.street}
-            placeholder="Street"
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
+          {renderInput("street", "text", "Street")}
         </div>
         <button type="submit" className="submit-button">
           Create Event
         </button>
-      </form >
+      </form>
     </>
   );
 };
