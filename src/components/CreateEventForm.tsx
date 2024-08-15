@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Event } from "../interfaces/Event";
+import '../styles/createEvent.css';
 import "../App.css";
+
 interface EventFormProps {
   user: any;
   sports: string[];
@@ -121,19 +123,16 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
       {showSuccessBanner ? successBanner : <></>}
       <h1 className="text-center text-3xl font-bold my-8">Create New Event</h1>
       <form onSubmit={handleSubmit} className="basic-form">
-        <div className="mb-4">
-          <label htmlFor="sport" className="input-label">
-            Olympic Sport
-          </label>
+        <div className="mb-4 flex-field">
           <select
             name="sport"
             id="sport"
             value={formData.sport}
             onChange={handleChange}
-            className="input-field"
+            className="input-field select-field"
             required
           >
-            <option value="" disabled>
+            <option value="" disabled className="placeholder-option">
               Select a sport
             </option>
             {sports.map((sport, index) => (
@@ -144,83 +143,24 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
           </select>
         </div>
         <div className="mb-4">
-          <label htmlFor="title" className="input-label">
-            Title
-          </label>
           <input
             type="text"
             name="title"
             id="title"
             value={formData.title}
+            placeholder="Event Name"
             onChange={handleChange}
             className="input-field"
             required
           />
         </div>
+
         <div className="mb-4">
-          <label htmlFor="state" className="input-label">
-            State
-          </label>
-          <input
-            type="text"
-            name="state"
-            id="state"
-            value={formData.state}
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="city" className="input-label">
-            City
-          </label>
-          <input
-            type="text"
-            name="city"
-            id="city"
-            value={formData.state}
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="zip" className="input-label">
-            Zip
-          </label>
-          <input
-            type="text"
-            name="zip"
-            id="zip"
-            value={formData.state}
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="street" className="input-label">
-            Street
-          </label>
-          <input
-            type="text"
-            name="street"
-            id="street"
-            value={formData.state}
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="description" className="input-label">
-            Description
-          </label>
           <textarea
             name="description"
             id="description"
             value={formData.description}
+            placeholder="Description"
             onChange={handleChange}
             className="input-field"
             required
@@ -228,9 +168,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="date" className="input-label">
-            Date
-          </label>
           <input
             type="datetime-local"
             name="date"
@@ -242,14 +179,63 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="maxAttendees" className="input-label">
-            Max Attendees
-          </label>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             name="maxAttendees"
             id="maxAttendees"
             value={formData.maxAttendees}
+            placeholder="Max attendees"
+            onChange={handleChange}
+            className="input-field"
+            required
+          />
+        </div>
+        <div className="address">
+          <div className="mb-4">
+            <input
+              type="text"
+              name="state"
+              id="state"
+              value={formData.state}
+              placeholder="State"
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              type="text"
+              name="city"
+              id="city"
+              value={formData.city}
+              placeholder="City"
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              type="text"
+              name="zip"
+              id="zip"
+              value={formData.zip}
+              placeholder="Zip"
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+        </div>
+        <div className="mb-4 street">
+          <input
+            type="text"
+            name="street"
+            id="street"
+            value={formData.street}
+            placeholder="Street"
             onChange={handleChange}
             className="input-field"
             required
@@ -258,7 +244,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ user, sports }) => {
         <button type="submit" className="submit-button">
           Create Event
         </button>
-      </form>
+      </form >
     </>
   );
 };
