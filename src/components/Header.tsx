@@ -20,7 +20,7 @@ const Header: React.FC = () => {
               className="mr-3 h-6 sm:h-9"
               alt="Not Quite Olympians Logo"
             />
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white text-purple-600">
+            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white text-purple-600 headline">
               Not Quite Olympians
             </span>
           </Link>
