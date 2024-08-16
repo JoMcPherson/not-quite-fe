@@ -19,7 +19,10 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const attendEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-    console.log();
+    const userName = token?.payload["cognito:username"];
+    console.log("userName", userName);
+    console.log("token", token);
+
     axios
       .post(
         `http://localhost:8080/event_attendees/${eventId}`,
@@ -41,7 +44,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const withdrawEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-
+  
     axios
 
       .delete(`http://localhost:8080/event_attendees/events/${eventId}`, {
