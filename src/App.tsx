@@ -3,13 +3,13 @@ import Header from "./components/Header";
 import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
 import { sports } from "./assets/sports";
-import { Authenticator } from "@aws-amplify/ui-react";
 import { Event } from "./interfaces/Event";
 import MainPage from "./components/MainPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import EventDetailPage from "./components/EventDetailPage";
 import MyEventsPage from "./components/MyEventsPage";
+import MyAuthenticator from "./components/MyAutheticator";
 
 function App() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -37,7 +37,7 @@ function App() {
   if (error) return <div>{error}</div>;
 
   return (
-    <Authenticator>
+    <MyAuthenticator>
       {({ user }) => (
         <Router>
           <div className="App">
@@ -62,14 +62,14 @@ function App() {
                 element={<EventDetailPage user={user} events={events} />}
               />
               <Route
-                path="/myevents"
+                path="/my_events"
                 element={<MyEventsPage user={user} />}
               />
             </Routes>
           </div>
         </Router>
       )}
-    </Authenticator>
+    </MyAuthenticator>
   );
 }
 
