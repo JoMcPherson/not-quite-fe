@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Event } from '../interfaces/Event';
 import '../App.css';
 import { fetchAuthSession } from "aws-amplify/auth";
+import EventCard from './EventCard';
 
 interface MyEventsProps {
     user: any;
@@ -34,8 +35,17 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
             };
 
         const fetchSignedUpEvents = async () => {
+            const session = await fetchAuthSession();
+            const token = session?.tokens?.idToken;
             try {
-                const response = await axios.get(`/events/attendedBy/${user.userId}`);
+                const response = await axios.get(
+                    `http://localhost:8080/user/${user.userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                        },
+                    }
+                );
                 setSignedUpEvents(response.data);
             } catch (error) {
                 console.error('Error fetching signed up events:', error);
@@ -52,38 +62,26 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
             <div className="events-section">
                 <h2 className="text-2xl font-bold mb-4">Created Events</h2>
                 {createdEvents.length > 0 ? (
-                    <ul className="events-list">
-                        {createdEvents.map(event => (
-                            <li key={event.id} className="event-item">
-                                <h3 className="event-title">{event.title}</h3>
-                                <p className="event-date">Date: {new Date(event.date).toLocaleString()}</p>
-                                <p className="event-location">
-                                    Location: {event.city}, {event.state}, {event.zip}
-                                </p>
-                            </li>
+                    <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {createdEvents.map((event) => (
+                            <EventCard key={event.id} event={event} />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
-                    <p>No events created yet.</p>
+                    <p className="text-center text-gray-500">No events created yet.</p>
                 )}
             </div>
             <div className="events-section">
-                <h2 className="text-2xl font-bold mb-4">Signed Up Events</h2>
-                {/* {signedUpEvents.length > 0 ? (
-                    <ul className="events-list">
-                        {signedUpEvents.map(event => (
-                            <li key={event.id} className="event-item">
-                                <h3 className="event-title">{event.title}</h3>
-                                <p className="event-date">Date: {new Date(event.date).toLocaleString()}</p>
-                                <p className="event-location">
-                                    Location: {event.city}, {event.state}, {event.zip}
-                                </p>
-                            </li>
+                <h2 className="text-2xl font-bold mb-4">Signed up Events</h2>
+                {signedUpEvents.length > 0 ? (
+                    <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {signedUpEvents.map((event) => (
+                            <EventCard key={event.id} event={event} />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
-                    <p>No events signed up for yet.</p>
-                )} */}
+                    <p className="text-center text-gray-500">No events signed up for yet.</p>
+                )}
             </div>
         </div>
     );
