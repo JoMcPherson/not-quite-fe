@@ -39,7 +39,7 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
             const token = session?.tokens?.idToken;
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/user/${user.userId}`,
+                    `http://localhost:8080/event_attendees/attended_events`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
