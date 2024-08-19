@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import axios from "axios";
@@ -10,18 +10,42 @@ interface EventDetailPageProps {
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
 
   const [isAttending, setIsAttending] = useState(false);
 
+  useEffect(() => {
+    const checkIfAttending = async () => {
+      const session = await fetchAuthSession();
+      const token = session?.tokens?.idToken;
+      const cognitoUserId = token?.payload.sub;
+      try {
+        const response = await axios.get<boolean>(
+          `http://localhost:8080/event_attendees/check/${eventId}/user/${cognitoUserId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setIsAttending(response.data);
+      } catch (error) {
+        console.error("Error checking if attending:", error);
+      }
+    };
+
+    if (eventId && user) {
+      checkIfAttending();
+    }
+  }, [eventId, user]);
+
   const attendEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-    console.log();
-    axios
-      .post(
+    try {
+      await axios.post(
         `http://localhost:8080/event_attendees/${eventId}`,
         {},
         {
@@ -29,39 +53,35 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then(() => {
-        setIsAttending(true);
-      })
-      .catch((error) => {
-        console.error("Error attending event:", error);
-      });
+      );
+      setIsAttending(true);
+    } catch (error) {
+      console.error("Error attending event:", error);
+    }
   };
 
   const withdrawEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-
-    axios
-
-      .delete(`http://localhost:8080/event_attendees/events/${eventId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(() => {
-        setIsAttending(false);
-      })
-      .catch((error) => {
-        console.error("Error withdrawing from event:", error);
-      });
+    try {
+      await axios.delete(
+        `http://localhost:8080/event_attendees/events/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsAttending(false);
+    } catch (error) {
+      console.error("Error withdrawing from event:", error);
+    }
   };
 
   if (!selectedEvent) {
     return <div>Event not found.</div>;
   }
 
-  // Replace with events number from axios call of event attendees
   const spotsLeft = selectedEvent.maxAttendees - 5;
 
   const deleteEvent = async (id: number) => {
@@ -80,7 +100,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   };
 
   return (
-      <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
+    <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
       <div className="flex justify-center py-8 px-4">
         <div className="w-full">
           <h1 className="text-3xl font-bold text-center mb-4">
@@ -114,15 +134,17 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               <div className="flex justify-center">
                 <button
                   onClick={isAttending ? withdrawEvent : attendEvent}
-                  className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${isAttending
+                  className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
+                    isAttending
                       ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
                       : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    } rounded-lg focus:outline-none`}
+                  } rounded-lg focus:outline-none`}
                 >
                   {isAttending ? "Withdraw" : "Sign up"}
                   <svg
-                    className={`rtl:rotate-180 w-4 h-4 ms-2 ${isAttending ? "" : "transform rotate-0"
-                      }`}
+                    className={`rtl:rotate-180 w-4 h-4 ms-2 ${
+                      isAttending ? "" : "transform rotate-0"
+                    }`}
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -156,7 +178,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
           </div>
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 
