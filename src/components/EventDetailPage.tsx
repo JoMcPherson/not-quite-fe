@@ -13,33 +13,40 @@ interface EventDetailPageProps {
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
+  const eventCreator = selectedEvent?.cognitoUserId;
 
   const [isAttending, setIsAttending] = useState(false);
 
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
   useEffect(() => {
-    const checkIfAttending = async () => {
-      const session = await fetchAuthSession();
-      const token = session?.tokens?.idToken;
-      const cognitoUserId = token?.payload.sub;
+    const fetchTokenAndCheckAttendance = async () => {
       try {
-        const response = await axios.get<boolean>(
-          `http://localhost:8080/event_attendees/check/${eventId}/user/${cognitoUserId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setIsAttending(response.data);
+        const session = await fetchAuthSession();
+        const idToken = session?.tokens?.idToken;
+        const cognitoUserId = idToken?.payload?.sub;
+        setLoggedInUser(cognitoUserId || null);
+
+        if (eventId && cognitoUserId) {
+          const response = await axios.get<boolean>(
+            `http://localhost:8080/event_attendees/check/${eventId}/user/${cognitoUserId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${idToken}`,
+              },
+            }
+          );
+          setIsAttending(response.data);
+        }
       } catch (error) {
-        console.error("Error checking if attending:", error);
+        console.error('Error fetching auth session or checking attendance:', error);
       }
     };
 
-    if (eventId && user) {
-      checkIfAttending();
-    }
+    fetchTokenAndCheckAttendance();
   }, [eventId, user]);
+
+
 
   const attendEvent = async () => {
     const session = await fetchAuthSession();
@@ -132,6 +139,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                 {selectedEvent.description}
               </p>
               <div className="flex justify-center">
+                { loggedInUser !== eventCreator ? (
                 <button
                   onClick={isAttending ? withdrawEvent : attendEvent}
                   className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
@@ -159,7 +167,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                     />
                   </svg>
                 </button>
-              </div>
+              ) : (
+              loggedInUser === eventCreator && (
               <div className="flex justify-center mt-4 space-x-2">
                 <a
                   href={`/edit/${eventId}`}
@@ -174,6 +183,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                   Delete Event
                 </button>
               </div>
+              )
+             )} 
+            </div>
             </div>
           </div>
         </div>
