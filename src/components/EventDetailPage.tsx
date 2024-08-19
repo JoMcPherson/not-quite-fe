@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import axios from "axios";
@@ -13,13 +13,30 @@ interface EventDetailPageProps {
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
+  const eventCreator = selectedEvent?.cognitoUserId;
 
   const [isAttending, setIsAttending] = useState(false);
+
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const session = await fetchAuthSession();
+        const idToken = session?.tokens?.idToken?.payload?.sub;
+        setLoggedInUser(idToken || null);
+      } catch (error) {
+        console.error('Error fetching auth session:', error);
+      }
+    };
+
+    fetchToken();
+  }, []);
 
   const attendEvent = async () => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
-    console.log();
+   
     axios
       .post(
         `http://localhost:8080/event_attendees/${eventId}`,
@@ -112,6 +129,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 {selectedEvent.description}
               </p>
               <div className="flex justify-center">
+                { loggedInUser !== eventCreator ? (
                 <button
                   onClick={isAttending ? withdrawEvent : attendEvent}
                   className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${isAttending
@@ -137,7 +155,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                     />
                   </svg>
                 </button>
-              </div>
+              ) : (
+              loggedInUser === eventCreator && (
               <div className="flex justify-center mt-4 space-x-2">
                 <a
                   href={`/edit/${eventId}`}
@@ -152,12 +171,15 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                   Delete Event
                 </button>
               </div>
+              )
+             )} 
             </div>
           </div>
         </div>
       </div>
-      </div>
-  );
+    </div>
+    </div>
+    );
 };
 
 export default EventDetailPage;
