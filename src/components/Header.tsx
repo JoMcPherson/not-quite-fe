@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Authenticator } from "@aws-amplify/ui-react";
 import Logo from "/images/NotQuiteLogo.png";
+import MyAuthenticator from "./MyAutheticator";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -80,7 +80,7 @@ const Header: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Authenticator>
+                <MyAuthenticator>
                   {({ signOut }) => (
                     <Link
                       to="/"
@@ -90,7 +90,7 @@ const Header: React.FC = () => {
                       Sign out
                     </Link>
                   )}
-                </Authenticator>
+                </MyAuthenticator>
               </li>
             </ul>
           </div>
