@@ -58,7 +58,7 @@ function App() {
               />
               <Route
                 path="/events/:eventId"
-                element={<EventDetailPage user={user} events={events} />}
+                element={<EventDetailPage events={events} />}
               />
               <Route path="/my_events" element={<MyEventsPage user={user} />} />
             </Routes>
