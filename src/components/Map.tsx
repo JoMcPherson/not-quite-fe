@@ -66,7 +66,6 @@ const Map: React.FC<MapProps> = ({ center, zoom, markerPosition })  => {
       await loadGoogleMapsApiAsync(apiKey);
       initializeMap();
     } catch (error) {
-      // console.error("Failed to load Google Maps API", error);
     }
   };
 
@@ -76,7 +75,6 @@ const Map: React.FC<MapProps> = ({ center, zoom, markerPosition })  => {
         await loadGoogleMapsApi();
         initializeMap();
       } catch (error) {
-        // console.error("Failed to load Google Maps API", error);
       }
     };
 
