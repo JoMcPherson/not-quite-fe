@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Map from './Map'; // Ensure the Map component is correctly imported
-import { fetchAuthSession } from "aws-amplify/auth"; // Ensure fetchAuthSession is correctly imported
-=======
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import Map from './Map'; 
+import { fetchAuthSession } from "aws-amplify/auth"; 
 import { Event } from "../interfaces/Event";
 import "../App.css";
 import {
@@ -15,8 +11,7 @@ import {
   deleteEvent,
   withdrawEvent,
 } from "../api/apiCalls";
-import { fetchAuthSession } from "@aws-amplify/auth";
->>>>>>> main
+
 
 interface EventDetailPageProps {
   user: any; 
@@ -68,97 +63,27 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
     fetchTokenAndCheckAttendance();
   }, [eventId]);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    const fetchCoordinates = async () => {
-      if (selectedEvent) {
-        const address = `${selectedEvent.street}, ${selectedEvent.city}, ${selectedEvent.state} ${selectedEvent.zip}`;
-        try {
-          const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
-            params: {
-              address,
-              key: apiKey
-            }
-          });
-          if (response.data.results.length > 0) {
-            const location = response.data.results[0].geometry.location;
-            setMapCenter({ lat: location.lat, lng: location.lng });
-            setMarkerPosition({ lat: location.lat, lng: location.lng });
-          } else {
-            console.error("No results found for address:", address);
-          }
-        } catch (error) {
-          console.error("Error fetching geocode:", error);
-        }
-      }
-    };
-
-    fetchCoordinates();
-  }, [selectedEvent, apiKey]);
-
-  const attendEvent = async () => {
-    try {
-      const session = await fetchAuthSession();
-      const token = session?.tokens?.idToken;
-      await axios.post(
-        `http://localhost:8080/event_attendees/${eventId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-=======
   const handleAttendEvent = async () => {
     try {
       await attendEvent(eventId!);
->>>>>>> main
       setIsAttending(true);
     } catch (error) {
       console.error("Error attending event:", error);
     }
   };
 
-<<<<<<< HEAD
-  const withdrawEvent = async () => {
-    try {
-      const session = await fetchAuthSession();
-      const token = session?.tokens?.idToken;
-      await axios.delete(
-        `http://localhost:8080/event_attendees/events/${eventId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-=======
   const handleWithdrawEvent = async () => {
     try {
       await withdrawEvent(eventId!);
->>>>>>> main
       setIsAttending(false);
     } catch (error) {
       console.error("Error withdrawing from event:", error);
     }
   };
 
-<<<<<<< HEAD
-  const deleteEvent = async (id: number) => {
-    try {
-      const session = await fetchAuthSession();
-      const token = session?.tokens?.idToken;
-      await axios.delete(`http://localhost:8080/events/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-=======
   const handleDeleteEvent = async (id: number) => {
     try {
       await deleteEvent(id);
->>>>>>> main
       console.log("Event deleted");
     } catch (error) {
       console.error("Error deleting event:", error);
@@ -213,13 +138,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
               <div className="flex justify-center">
                 {loggedInUser !== eventCreator ? (
                   <button
-<<<<<<< HEAD
-                    onClick={isAttending ? withdrawEvent : attendEvent}
-=======
                     onClick={
                       isAttending ? handleWithdrawEvent : handleAttendEvent
                     }
->>>>>>> main
                     className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
                       isAttending
                         ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
@@ -255,11 +176,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                         Edit Event
                       </a>
                       <button
-<<<<<<< HEAD
-                        onClick={() => deleteEvent(selectedEvent.id)}
-=======
                         onClick={() => handleDeleteEvent(selectedEvent.id)}
->>>>>>> main
                         className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
                       >
                         Delete Event
