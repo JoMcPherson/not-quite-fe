@@ -1,14 +1,262 @@
+// import React, { useState, useEffect } from "react";
+// import { useParams } from "react-router-dom";
+// import { Event } from "../interfaces/Event";
+// import axios from "axios";
+// import "../App.css";
+// import { fetchAuthSession } from "aws-amplify/auth";
+// import Map from "./Map"; // Import the Map component
+
+// interface EventDetailPageProps {
+//   user: any;
+//   events: Event[];
+// }
+
+// const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+//   const { eventId } = useParams<{ eventId: string }>();
+//   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
+//   const eventCreator = selectedEvent?.cognitoUserId;
+
+//   const [isAttending, setIsAttending] = useState(false);
+//   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+//   // const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral | null>(null);
+//   // const [mapZoom] = useState(10); 
+
+//   const center: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 }; // San Francisco
+//   const zoom = 12;
+//   const markerPosition: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 };
+
+
+//   useEffect(() => {
+//     const fetchTokenAndCheckAttendance = async () => {
+//       try {
+//         const session = await fetchAuthSession();
+//         const idToken = session?.tokens?.idToken;
+//         const cognitoUserId = idToken?.payload?.sub;
+//         setLoggedInUser(cognitoUserId || null);
+
+//         if (eventId && cognitoUserId) {
+//           const response = await axios.get<boolean>(
+//             `http://localhost:8080/event_attendees/check/${eventId}/user/${cognitoUserId}`,
+//             {
+//               headers: {
+//                 Authorization: `Bearer ${idToken}`,
+//               },
+//             }
+//           );
+//           setIsAttending(response.data);
+//         }
+//       } catch (error) {
+//         console.error('Error fetching auth session or checking attendance:', error);
+//       }
+//     };
+
+    // const fetchCoordinates = async () => {
+    //   if (selectedEvent) {
+    //     const address = `${selectedEvent.city}, ${selectedEvent.state}`;
+    //     try {
+    //       const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+    //         params: {
+    //           address,
+    //           key: apiKey
+    //         }
+    //       });
+    //       if (response.data.results.length > 0) {
+    //         const location = response.data.results[0].geometry.location;
+    //         setMapCenter({ lat: location.lat, lng: location.lng });
+    //       } else {
+    //         console.error("No results found for address:", address);
+    //       }
+    //     } catch (error) {
+    //       console.error("Error fetching geocode:", error);
+    //     }
+    //   }
+    // };
+
+  //   fetchTokenAndCheckAttendance();
+  //   fetchCoordinates();
+  // }, [eventId, selectedEvent, user, apiKey]);
+
+  // const attendEvent = async () => {
+  //   const session = await fetchAuthSession();
+  //   const token = session?.tokens?.idToken;
+  //   try {
+  //     await axios.post(
+  //       `http://localhost:8080/event_attendees/${eventId}`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setIsAttending(true);
+  //   } catch (error) {
+  //     console.error("Error attending event:", error);
+  //   }
+  // };
+
+  // const withdrawEvent = async () => {
+  //   const session = await fetchAuthSession();
+  //   const token = session?.tokens?.idToken;
+  //   try {
+  //     await axios.delete(
+  //       `http://localhost:8080/event_attendees/events/${eventId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setIsAttending(false);
+  //   } catch (error) {
+  //     console.error("Error withdrawing from event:", error);
+  //   }
+  // };
+
+  // if (!selectedEvent) {
+  //   return <div>Event not found.</div>;
+  // }
+
+  // const spotsLeft = selectedEvent.maxAttendees - 5;
+
+  // const deleteEvent = async (id: number) => {
+  //   const session = await fetchAuthSession();
+  //   const token = session?.tokens?.idToken;
+  //   try {
+  //     await axios.delete(`http://localhost:8080/events/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     console.log("Event deleted");
+  //   } catch (error) {
+  //     console.error("Error deleting event:", error);
+  //   }
+  // };
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Event } from "../interfaces/Event";
 import axios from "axios";
 import "../App.css";
 import { fetchAuthSession } from "aws-amplify/auth";
+import Map from "./Map"; 
 
 interface EventDetailPageProps {
   user: any;
   events: Event[];
 }
+
+// const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+//   const { eventId } = useParams<{ eventId: string }>();
+//   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
+//   const eventCreator = selectedEvent?.cognitoUserId;
+//   console.log("Selected Event", selectedEvent);
+
+//   const [isAttending, setIsAttending] = useState(false);
+
+//   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
+//   const center: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 }; // San Francisco
+//   const zoom = 12;
+//   const markerPosition: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 };
+
+
+
+  
+//   const apiKey = import.meta.env.VITE_API_KEY;
+  
+//   // Example center coordinates; adjust as needed
+//   // const defaultCenter = '40.7128,-74.0060'; // Default to New York City
+//   // const zoom = 10; // Adjust zoom for a good view at small size
+//   // const size = '100x100'; // Very small square size
+//   // const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(defaultCenter)}&zoom=${zoom}&size=${size}&key=${apiKey}`;
+  
+
+//   useEffect(() => {
+//     const fetchTokenAndCheckAttendance = async () => {
+//       try {
+//         const session = await fetchAuthSession();
+//         const idToken = session?.tokens?.idToken;
+//         const cognitoUserId = idToken?.payload?.sub;
+//         setLoggedInUser(cognitoUserId || null);
+
+//         if (eventId && cognitoUserId) {
+//           const response = await axios.get<boolean>(
+//             `http://localhost:8080/event_attendees/check/${eventId}/user/${cognitoUserId}`,
+//             {
+//               headers: {
+//                 Authorization: `Bearer ${idToken}`,
+//               },
+//             }
+//           );
+//           setIsAttending(response.data);
+//         }
+//       } catch (error) {
+//         console.error('Error fetching auth session or checking attendance:', error);
+//       }
+//     };
+
+//     fetchTokenAndCheckAttendance();
+//   }, [eventId, user]);
+
+//   const attendEvent = async () => {
+//     const session = await fetchAuthSession();
+//     const token = session?.tokens?.idToken;
+//     try {
+//       await axios.post(
+//         `http://localhost:8080/event_attendees/${eventId}`,
+//         {},
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       setIsAttending(true);
+//     } catch (error) {
+//       console.error("Error attending event:", error);
+//     }
+//   };
+
+//   const withdrawEvent = async () => {
+//     const session = await fetchAuthSession();
+//     const token = session?.tokens?.idToken;
+//     try {
+//       await axios.delete(
+//         `http://localhost:8080/event_attendees/events/${eventId}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       setIsAttending(false);
+//     } catch (error) {
+//       console.error("Error withdrawing from event:", error);
+//     }
+//   };
+
+//   if (!selectedEvent) {
+//     return <div>Event not found.</div>;
+//   }
+
+//   const spotsLeft = selectedEvent.maxAttendees - 5;
+
+//   const deleteEvent = async (id: number) => {
+//     const session = await fetchAuthSession();
+//     const token = session?.tokens?.idToken;
+//     try {
+//       await axios.delete(`http://localhost:8080/events/${id}`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//       console.log("Event deleted");
+//     } catch (error) {
+//       console.error("Error deleting event:", error);
+//     }
+//   };
 
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -16,8 +264,14 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const eventCreator = selectedEvent?.cognitoUserId;
 
   const [isAttending, setIsAttending] = useState(false);
-
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
+  // State for map coordinates
+  const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral | null>(null);
+  const [markerPosition, setMarkerPosition] = useState<google.maps.LatLngLiteral | null>(null);
+  const [zoom] = useState(12); // Set a default zoom level
+
+  const apiKey = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     const fetchTokenAndCheckAttendance = async () => {
@@ -43,10 +297,34 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
       }
     };
 
+    const fetchCoordinates = async () => {
+      if (selectedEvent) {
+        const address = `2237 Decatur Road, Wilmington, Delaware 19801`;
+        console.log("Address", address);
+        try {
+          const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+            params: {
+              address,
+              key: apiKey
+            }
+          });
+          if (response.data.results.length > 0) {
+            const location = response.data.results[0].geometry.location;
+            console.log("Location", location);
+            setMapCenter({ lat: location.lat, lng: location.lng });
+            setMarkerPosition({ lat: location.lat, lng: location.lng });
+          } else {
+            console.error("No results found for address:", address);
+          }
+        } catch (error) {
+          console.error("Error fetching geocode:", error);
+        }
+      }
+    };
+
     fetchTokenAndCheckAttendance();
-  }, [eventId, user]);
-
-
+    fetchCoordinates();
+  }, [eventId, selectedEvent, apiKey]);
 
   const attendEvent = async () => {
     const session = await fetchAuthSession();
@@ -113,6 +391,22 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
           <h1 className="text-3xl font-bold text-center mb-4">
             {selectedEvent.title}
           </h1>
+          <div className="flex justify-center pb-8">
+              <Map
+                center={mapCenter}
+                zoom={zoom}
+                markerPosition={markerPosition}
+              />
+            {/* <Map 
+                center={{ lat: selectedEvent.latitude, lng: selectedEvent.longitude }} 
+                zoom={10} 
+              /> */}
+            {/* <img
+              src={mapUrl}
+              alt="Map"
+              style={{ width: '300px', height: '300px', border: '1px solid #ddd' }} // Styling to ensure the map appears square and small
+            /> */}
+          </div>   
           <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto">
             <img
               className="object-cover w-full md:w-1/2 h-96 md:h-auto rounded-t-lg md:rounded-l-lg"
