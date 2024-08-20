@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import EventDetailPage from "./EventDetailPage";
 import { describe, it, expect } from "vitest";
-//eslint-disable-next-line
 import * as React from "react";
 
 const event = {
