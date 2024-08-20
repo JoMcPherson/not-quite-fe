@@ -3,8 +3,7 @@ import axios from "axios";
 import "../App.css";
 import { Event } from "../interfaces/Event";
 import { fetchAuthSession } from "aws-amplify/auth";
-import '../styles/createEvent.css';
-
+import "../styles/createEvent.css";
 
 interface EventFormProps {
   sports: string[];
@@ -79,7 +78,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -89,6 +87,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
     const token = session?.tokens?.idToken;
 
     const imagepath = formData.sport.toLowerCase().replace(/ /g, "_");
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     const eventPayload = {
       ...formData,
@@ -100,7 +99,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/events",
+        `${API_BASE_URL}/events`,
         eventPayload,
         {
           headers: {
@@ -201,13 +200,13 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
             type="number"
             name="maxAttendees"
             id="maxAttendees"
-            value={formData.maxAttendees === 0 ? '' : formData.maxAttendees}
+            value={formData.maxAttendees === 0 ? "" : formData.maxAttendees}
             placeholder="Max attendees"
             onChange={handleChange}
             className="input-field"
             required
             onBlur={(e) => {
-              if (e.target.value === '') {
+              if (e.target.value === "") {
                 setFormData({ ...formData, maxAttendees: 0 });
               }
             }}
@@ -266,7 +265,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
         <button type="submit" className="submit-button">
           Create Event
         </button>
-      </form >
+      </form>
     </>
   );
 };
