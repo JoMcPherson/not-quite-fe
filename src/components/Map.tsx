@@ -96,19 +96,23 @@ const Map = ({ center, zoom, markerPosition }) => {
 
 
   const initializeMap = () => {
-    if (typeof google !== 'undefined' && mapRef.current) {
+    if (typeof google === 'undefined') {
+      console.error("Google Maps API not loaded.");
+      return;
+    }
+    if (mapRef.current) {
       const map = new google.maps.Map(mapRef.current, {
         center,
         zoom,
       });
       if (markerPosition) {
-        new google.maps.Marker({
+        new google.maps.marker.AdvancedMarkerElement({
           map,
           position: markerPosition,
         });
       }
     } else {
-      console.error("Google Maps API not loaded.");
+      console.error("mapRef is null.");
     }
   };
 
