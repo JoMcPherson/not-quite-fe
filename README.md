@@ -3,6 +3,8 @@
 **Project Description:**
 Not Quite Olympians is a web application developed by Tyler Byrd, Shaan Malhotra, Juan Jose Pinol, and Joanna McPherson. The application is designed to host and attend events tailored for beginners interested in exploring Olympic sports. Users can create, manage, and participate in events, providing a platform for enthusiasts to engage in and try out various sports.
 
+**Live Application:** [http://notquitebucket.s3-website.us-east-2.amazonaws.com/](http://notquitebucket.s3-website.us-east-2.amazonaws.com/)
+
 ## Project Architecture
 
 ### Frontend
