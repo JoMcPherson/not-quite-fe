@@ -5,13 +5,13 @@ import Map from './Map'; // Ensure the Map component is correctly imported
 import { fetchAuthSession } from "aws-amplify/auth"; // Ensure fetchAuthSession is correctly imported
 
 interface EventDetailPageProps {
-  user: any; // Define your user type
-  events: Array<any>; // Define your event type
+  user: any; 
+  events: Array<any>; 
 }
 
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const { eventId } = useParams<{ eventId: string }>();
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Define event type
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); 
   const [isAttending, setIsAttending] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 }); // Default to San Francisco
