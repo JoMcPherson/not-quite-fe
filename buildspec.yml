@@ -21,7 +21,7 @@ phases:
     commands:
       - echo Build completed successfully
       - echo "Deploying to S3..."
-      - aws s3 sync dist/ s3://notquitebucket --delete
+      - aws s3 sync dist/ s3://notquitebucket --delete --exclude "aws-exports.ts"
 artifacts:
   files:
     - "**/*"
