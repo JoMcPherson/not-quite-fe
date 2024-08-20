@@ -16,8 +16,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
   const eventCreator = selectedEvent?.cognitoUserId;
 
   const [isAttending, setIsAttending] = useState(false);
-
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const [attendees, setAttendees] = useState<string[]>([]);
+  const [showAttendees, setShowAttendees] = useState(false);
 
   useEffect(() => {
     const fetchTokenAndCheckAttendance = async () => {
@@ -45,8 +46,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
 
     fetchTokenAndCheckAttendance();
   }, [eventId, user]);
-
-
 
   const attendEvent = async () => {
     const session = await fetchAuthSession();
@@ -82,6 +81,26 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
       setIsAttending(false);
     } catch (error) {
       console.error("Error withdrawing from event:", error);
+    }
+  };
+
+  const fetchAttendees = async () => {
+    try {
+      const session = await fetchAuthSession();
+      const token = session?.tokens?.idToken;
+
+      const response = await axios.get<string[]>(
+        `http://localhost:8080/event_attendees/events/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAttendees(response.data);
+      setShowAttendees(!showAttendees);
+    } catch (error) {
+      console.error("Error fetching attendees:", error);
     }
   };
 
@@ -139,53 +158,73 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                 {selectedEvent.description}
               </p>
               <div className="flex justify-center">
-                { loggedInUser !== eventCreator ? (
-                <button
-                  onClick={isAttending ? withdrawEvent : attendEvent}
-                  className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
-                    isAttending
+                {loggedInUser !== eventCreator ? (
+                  <button
+                    onClick={isAttending ? withdrawEvent : attendEvent}
+                    className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${isAttending
                       ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
                       : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  } rounded-lg focus:outline-none`}
-                >
-                  {isAttending ? "Withdraw" : "Sign up"}
-                  <svg
-                    className={`rtl:rotate-180 w-4 h-4 ms-2 ${
-                      isAttending ? "" : "transform rotate-0"
-                    }`}
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 10"
+                      } rounded-lg focus:outline-none`}
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M1 5h12m0 0L9 1m4 4L9 9"
-                    />
-                  </svg>
-                </button>
-              ) : (
-              loggedInUser === eventCreator && (
-              <div className="flex justify-center mt-4 space-x-2">
-                <a
-                  href={`/edit/${eventId}`}
-                  className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
-                >
-                  Edit Event
-                </a>
+                    {isAttending ? "Withdraw" : "Sign up"}
+                    <svg
+                      className={`rtl:rotate-180 w-4 h-4 ms-2 ${isAttending ? "" : "transform rotate-0"
+                        }`}
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M1 5h12m0 0L9 1m4 4L9 9"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  loggedInUser === eventCreator && (
+                    <div className="flex justify-center mt-4 space-x-2">
+                      <a
+                        href={`/edit/${eventId}`}
+                        className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                      >
+                        Edit Event
+                      </a>
+                      <button
+                        onClick={() => deleteEvent(selectedEvent.id)}
+                        className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                      >
+                        Delete Event
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
+              <div className="flex justify-center mt-4">
                 <button
-                  onClick={() => deleteEvent(selectedEvent.id)}
-                  className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                  onClick={fetchAttendees}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700"
                 >
-                  Delete Event
+                  {showAttendees ? "Hide Attendees" : "See Attendees"}
                 </button>
               </div>
-              )
-             )} 
-            </div>
+              {showAttendees && (
+                <div className="mt-4 text-left">
+                  <h3 className="text-xl font-bold mb-2">Attendees:</h3>
+                  {attendees.length > 0 ? (
+                    <ul className="list-disc list-inside">
+                      {attendees.map((username, index) => (
+                        <li key={index}>{username}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No attendees yet.</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
