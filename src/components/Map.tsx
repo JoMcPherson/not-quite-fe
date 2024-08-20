@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 interface MapProps {
@@ -13,20 +13,42 @@ const mapContainerStyle = {
 };
 
 const Map: React.FC<MapProps> = ({ center, zoom, markerPosition }) => {
-  const apiKey = import.meta.env.VITE_API_KEY;
-  console.log('Loading Google Maps API with key:', apiKey);
+  const mapRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <LoadScript googleMapsApiKey={apiKey}>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={center}
-        zoom={zoom}
-      >
-        {markerPosition && <Marker position={markerPosition} />}
-      </GoogleMap>
-    </LoadScript>
-  );
+  useEffect(() => {
+    // Load the Google Maps JavaScript API
+    const loadGoogleMapsApi = () => {
+      if (!window.google) {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_API_KEY}&libraries=places`;
+        script.async = true;
+        document.head.appendChild(script);
+        script.onload = initializeMap;
+      } else {
+        initializeMap();
+      }
+    };
+
+    const initializeMap = () => {
+      if (mapRef.current) {
+        const map = new google.maps.Map(mapRef.current, {
+          center,
+          zoom,
+        });
+
+        if (markerPosition) {
+          new google.maps.Marker({
+            map,
+            position: markerPosition,
+          });
+        }
+      }
+    };
+
+    loadGoogleMapsApi();
+  }, [center, zoom, markerPosition]);
+
+  return (<div ref={mapRef} style={mapContainerStyle} />)
 };
 
 export default Map;
