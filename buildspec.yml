@@ -10,6 +10,9 @@ phases:
   pre_build:
     commands:
       - echo Running pre-build steps...
+      - echo Downloading aws-exports.ts from S3...
+      - aws s3 cp s3://notquitebucket/aws-exports.ts ./src/aws-exports.ts
+
   build:
     commands:
       - echo Building the Vite React app...
