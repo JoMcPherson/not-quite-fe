@@ -11,11 +11,10 @@ import {
 import { fetchAuthSession } from "@aws-amplify/auth";
 
 interface EventDetailPageProps {
-  user: any;
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
   const eventCreator = selectedEvent?.cognitoUserId;
@@ -43,7 +42,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
     };
 
     fetchTokenAndCheckAttendance();
-  }, [eventId, user]);
+  }, [eventId]);
 
   const handleAttendEvent = async () => {
     try {
@@ -116,6 +115,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                     onClick={
                       isAttending ? handleWithdrawEvent : handleAttendEvent
                     }
+                    data-testid="signUp"
                     className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
                       isAttending
                         ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
@@ -153,6 +153,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
                       <button
                         onClick={() => handleDeleteEvent(selectedEvent.id)}
                         className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                        data-testid="delete"
                       >
                         Delete Event
                       </button>
