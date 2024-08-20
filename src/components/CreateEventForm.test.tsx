@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-//eslint-disable-next-line
 import * as React from "react";
 import { describe, it, expect } from "vitest";
 import CreateEventForm from "./CreateEventForm";
