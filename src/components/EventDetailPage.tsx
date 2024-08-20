@@ -6,11 +6,10 @@ import "../App.css";
 import { fetchAuthSession } from "aws-amplify/auth";
 
 interface EventDetailPageProps {
-  user: any;
   events: Event[];
 }
 
-const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
+const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
   const eventCreator = selectedEvent?.cognitoUserId;
@@ -45,7 +44,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ user, events }) => {
     };
 
     fetchTokenAndCheckAttendance();
-  }, [eventId, user]);
+  }, [eventId]);
 
   const attendEvent = async () => {
     const session = await fetchAuthSession();
