@@ -9,6 +9,7 @@ import {
   withdrawEvent,
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
+import axios from "axios";
 
 interface EventDetailPageProps {
   events: Event[];
@@ -88,8 +89,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     return <div>Event not found.</div>;
   }
 
-  const spotsLeft = selectedEvent.maxAttendees - 5;
-
   const deleteEvent = async (id: number) => {
     const session = await fetchAuthSession();
     const token = session?.tokens?.idToken;
@@ -142,17 +141,20 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               <div className="flex justify-center">
                 {loggedInUser !== eventCreator ? (
                   <button
-
-                    onClick={isAttending ? withdrawEvent : attendEvent}
-                    className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${isAttending
-                      ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
-                      : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      } rounded-lg focus:outline-none`}
+                    onClick={
+                      isAttending ? handleWithdrawEvent : handleAttendEvent
+                    }
+                    className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
+                      isAttending
+                        ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
+                        : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    } rounded-lg focus:outline-none`}
                   >
                     {isAttending ? "Withdraw" : "Sign up"}
                     <svg
-                      className={`rtl:rotate-180 w-4 h-4 ms-2 ${isAttending ? "" : "transform rotate-0"
-                        }`}
+                      className={`rtl:rotate-180 w-4 h-4 ms-2 ${
+                        isAttending ? "" : "transform rotate-0"
+                      }`}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -177,7 +179,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                         Edit Event
                       </a>
                       <button
-
                         onClick={() => deleteEvent(selectedEvent.id)}
                         className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
                       >
@@ -186,7 +187,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                     </div>
                   )
                 )}
-
               </div>
               <div className="flex justify-center mt-4">
                 <button
@@ -210,7 +210,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                   )}
                 </div>
               )}
-
             </div>
           </div>
         </div>
