@@ -1,8 +1,8 @@
-import React from "react";
-import "@testing-library/jest-dom";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import EditEventForm from "./EditEventForm";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import * as React from "react";
 
 const user = { userId: "1234" };
 const sports = ["soccer", "basketball", "volleyball"];
@@ -19,12 +19,16 @@ const event = {
   createdAt: "2024-08-01T10:00:00Z",
   lastUpdated: "2024-08-05T15:00:00Z",
   cancelled: false,
+  city: "City Name", // Add these fields
+  state: "State Name", // Add these fields
+  zip: "12345", // Add these fields
+  street: "Street Name", // Add these fields
 };
 
 const events = [event];
 
 describe("EditEventForm", () => {
-  it("renders a form with prepoulated input fields", async () => {
+  it("renders a form with prepopulated input fields", async () => {
     render(
       <MemoryRouter initialEntries={["/edit/1"]}>
         <Routes>

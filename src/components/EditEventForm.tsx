@@ -81,10 +81,10 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
       cognitoUserId: user.userId,
       lastUpdated: new Date().toISOString(), // Set lastUpdated to the current date/time
     };
-
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     try {
       const response = await axios.put(
-        `http://localhost:8080/events/${eventId}`,
+        `${API_BASE_URL}/events/${eventId}`,
         eventPayload,
         {
           headers: {

@@ -1,26 +1,40 @@
-import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import * as React from "react";
+import { describe, it, expect } from "vitest";
 import CreateEventForm from "./CreateEventForm";
 
-const user = { userId: "1234" };
 const sports = ["soccer", "basketball", "volleyball"];
 
 describe("CreateEventForm", () => {
-  it("renders a form with input fields", async () => {
-    render(<CreateEventForm user={user} sports={sports} />);
-    const createEvent = await screen.findByText("Create New Event");
-    expect(createEvent).toBeInTheDocument();
-    const olympicElement = await screen.findByText("Olympic Sport");
-    expect(olympicElement).toBeInTheDocument();
+  it("renders the form with input fields", () => {
+    render(<CreateEventForm sports={sports} />);
+
+    const createEventTitle = screen.getByText("Create New Event");
+    expect(createEventTitle).toBeInTheDocument();
+
+    const olympicLabel = screen.getByTestId("sport");
+    expect(olympicLabel).toBeInTheDocument();
   });
-  it("renders a dropdown of sports", async () => {
-    render(<CreateEventForm user={user} sports={sports} />);
-    const sportDropdown = await screen.findByLabelText("Olympic Sport");
+
+  it("renders a dropdown with sports options", () => {
+    render(<CreateEventForm sports={sports} />);
+
+    const sportDropdown = screen.getByTestId("sport");
     expect(sportDropdown).toBeInTheDocument();
     expect(sportDropdown).toHaveValue("");
+
+    fireEvent.change(sportDropdown, { target: { value: "soccer" } });
+    expect(sportDropdown).toHaveValue("soccer");
+  });
+
+  it("shows the correct options in the dropdown", () => {
+    render(<CreateEventForm sports={sports} />);
+
+    const sportDropdown = screen.getByTestId("sport");
     expect(sportDropdown).toHaveTextContent("Select a sport");
-    sportDropdown.click();
     expect(sportDropdown).toHaveTextContent("soccer");
+    expect(sportDropdown).toHaveTextContent("basketball");
+    expect(sportDropdown).toHaveTextContent("volleyball");
   });
 });

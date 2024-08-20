@@ -1,9 +1,8 @@
-import React from "react";
-import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import EventDetailPage from "./EventDetailPage";
-import axios from "axios";
+import { describe, it, expect } from "vitest";
+import * as React from "react";
 
 const event = {
   id: 1,
@@ -18,14 +17,15 @@ const event = {
   createdAt: "2024-08-01T10:00:00Z",
   lastUpdated: "2024-08-05T15:00:00Z",
   cancelled: false,
+  city: "City Name",
+  state: "State Name",
+  zip: "12345",
+  street: "Street Name",
 };
 
 const events = [event];
-jest.mock("axios");
-const mockDelete = jest.fn();
-axios.delete = mockDelete;
 
-describe("EventDetail", () => {
+describe("EventDetailPage", () => {
   it("renders a form with description and spots left", async () => {
     render(
       <MemoryRouter initialEntries={["/events/1"]}>
@@ -43,7 +43,7 @@ describe("EventDetail", () => {
     expect(title).toBeInTheDocument();
   });
 
-  it("renders buttons for delete", async () => {
+  it("renders buttons for signUp", async () => {
     render(
       <MemoryRouter initialEntries={["/events/1"]}>
         <Routes>
@@ -54,10 +54,7 @@ describe("EventDetail", () => {
         </Routes>
       </MemoryRouter>
     );
-    const deleteButton = await screen.findByText(/Delete/i);
-
-    expect(deleteButton).toBeInTheDocument();
-    deleteButton.click();
-    expect(mockDelete).toHaveBeenCalled();
+    const signUpButton = await screen.findByTestId("signUp");
+    expect(signUpButton).toBeInTheDocument();
   });
 });

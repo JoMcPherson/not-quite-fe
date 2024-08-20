@@ -15,13 +15,12 @@ function App() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get<Event[]>(
-          "http://localhost:8080/events"
-        );
+        const response = await axios.get<Event[]>(`${API_BASE_URL}/events`);
         setEvents(response.data);
       } catch (err) {
         setError("Failed to fetch events");
@@ -59,12 +58,9 @@ function App() {
               />
               <Route
                 path="/events/:eventId"
-                element={<EventDetailPage user={user} events={events} />}
+                element={<EventDetailPage events={events} />}
               />
-              <Route
-                path="/my_events"
-                element={<MyEventsPage user={user} />}
-              />
+              <Route path="/my_events" element={<MyEventsPage user={user} />} />
             </Routes>
           </div>
         </Router>
