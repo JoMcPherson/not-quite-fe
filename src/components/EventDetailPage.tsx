@@ -9,6 +9,7 @@ import {
   withdrawEvent,
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
+import axios from "axios";
 
 interface EventDetailPageProps {
   events: Event[];
@@ -21,6 +22,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
 
   const [isAttending, setIsAttending] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const [attendees, setAttendees] = useState<string[]>([]);
+  const [showAttendees, setShowAttendees] = useState(false);
 
   useEffect(() => {
     const fetchTokenAndCheckAttendance = async () => {
@@ -62,7 +65,33 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     }
   };
 
-  const handleDeleteEvent = async (id: number) => {
+  const fetchAttendees = async () => {
+    try {
+      const session = await fetchAuthSession();
+      const token = session?.tokens?.idToken;
+
+      const response = await axios.get<string[]>(
+        `http://localhost:8080/event_attendees/events/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAttendees(response.data);
+      setShowAttendees(!showAttendees);
+    } catch (error) {
+      console.error("Error fetching attendees:", error);
+    }
+  };
+
+  if (!selectedEvent) {
+    return <div>Event not found.</div>;
+  }
+
+  const deleteEvent = async (id: number) => {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
     try {
       await deleteEvent(id);
       console.log("Event deleted");
@@ -115,7 +144,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                     onClick={
                       isAttending ? handleWithdrawEvent : handleAttendEvent
                     }
-                    data-testid="signUp"
                     className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
                       isAttending
                         ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
@@ -151,9 +179,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                         Edit Event
                       </a>
                       <button
-                        onClick={() => handleDeleteEvent(selectedEvent.id)}
+                        onClick={() => deleteEvent(selectedEvent.id)}
                         className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
-                        data-testid="delete"
                       >
                         Delete Event
                       </button>
@@ -161,6 +188,28 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                   )
                 )}
               </div>
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={fetchAttendees}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700"
+                >
+                  {showAttendees ? "Hide Attendees" : "See Attendees"}
+                </button>
+              </div>
+              {showAttendees && (
+                <div className="mt-4 text-left">
+                  <h3 className="text-xl font-bold mb-2">Attendees:</h3>
+                  {attendees.length > 0 ? (
+                    <ul className="list-disc list-inside">
+                      {attendees.map((username, index) => (
+                        <li key={index}>{username}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No attendees yet.</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
