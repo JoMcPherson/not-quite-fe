@@ -25,6 +25,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [attendees, setAttendees] = useState<string[]>([]);
   const [showAttendees, setShowAttendees] = useState(false);
+  const [showSpotsLeft, setShowSpotsLeft] = useState(false);
 
   useEffect(() => {
     const fetchTokenAndCheckAttendance = async () => {
@@ -80,21 +81,29 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
         }
       );
       setAttendees(response.data);
-      setShowAttendees(!showAttendees);
+      setShowSpotsLeft(true);
     } catch (error) {
       console.error("Error fetching attendees:", error);
     }
   };
 
-  if (!selectedEvent) {
-    return <div>Event not found.</div>;
-  }
+  const handleFetchAttendees = () => {
+    setShowAttendees(!showAttendees);
+    fetchAttendees();
+  };
+  useEffect(() => {
+    fetchAttendees();
+  });
 
   if (!selectedEvent) {
     return <div>Event not found.</div>;
   }
 
-  const spotsLeft = selectedEvent.maxAttendees - 5;
+  if (!selectedEvent) {
+    return <div>Event not found.</div>;
+  }
+
+  const spotsLeft = selectedEvent.maxAttendees - attendees.length;
 
   return (
     <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
@@ -113,9 +122,15 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               <h5 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                 {`${selectedEvent.street}, ${selectedEvent.city}, ${selectedEvent.state} ${selectedEvent.zip}`}
               </h5>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {spotsLeft} spots left
-              </p>
+              {showSpotsLeft ? (
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  {spotsLeft} spots left
+                </p>
+              ) : (
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  Loading ...
+                </p>
+              )}
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <b>Timing: </b>
                 {new Date(selectedEvent.date).toLocaleString()}
@@ -180,7 +195,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               </div>
               <div className="flex justify-center mt-4">
                 <button
-                  onClick={fetchAttendees}
+                  onClick={handleFetchAttendees}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700"
                 >
                   {showAttendees ? "Hide Attendees" : "See Attendees"}
