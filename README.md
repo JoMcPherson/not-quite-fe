@@ -10,7 +10,7 @@ Not Quite Olympians is a web application developed by Tyler Byrd, Shaan Malhotra
 ### Frontend
 
 - **Framework:** React (TypeScript)
-- **Deployment:** Hosted on AWS S3 with AWS CodeBuild for continuous integration and deployment.
+- **Deployment:** Hosted on AWS S3 with AWS CodeBuild and AWS CodePipeline for continuous integration and deployment.
 - **Build Tool:** Vite for building the React application.
 - **Styling:** Tailwind CSS for styling.
 - **API Calls:** Utilizes Axios for making HTTP requests to backend services.
