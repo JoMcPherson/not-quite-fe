@@ -10,10 +10,9 @@ import {
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
 import axios from "axios";
-import Map from './Map'; 
+import Map from "./Map";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 
 interface EventDetailPageProps {
   events: Event[];
@@ -22,7 +21,7 @@ interface EventDetailPageProps {
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
-  const [currentEvent, setCurrentEvent] = useState<any>(null); 
+  const [currentEvent, setCurrentEvent] = useState<any>(null);
   const eventCreator = selectedEvent?.cognitoUserId;
 
   const [isAttending, setIsAttending] = useState(false);
@@ -31,56 +30,69 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const [showAttendees, setShowAttendees] = useState(false);
   const [showSpotsLeft, setShowSpotsLeft] = useState(false);
 
-  const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 }); // Default to San Francisco
-  const [markerPosition, setMarkerPosition] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 }); // Default to San Francisco
+  const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({
+    lat: 37.7749,
+    lng: -122.4194,
+  }); // Default to San Francisco
+  const [markerPosition, setMarkerPosition] =
+    useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 }); // Default to San Francisco
   const [zoom] = useState(12);
 
   const apiKey = import.meta.env.VITE_API_KEY;
 
-    useEffect(() => {
-      const fetchEventData = async () => {
-        if (eventId) {
-          try {
-            const event = events.find((e) => e.id === parseInt(eventId));
-            setCurrentEvent(event || null);
-      
-            if (event) {
-              const address = `${event.street}, ${event.city}, ${event.state} ${event.zip}`;
-              try {
-                const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+  useEffect(() => {
+    const fetchEventData = async () => {
+      if (eventId) {
+        try {
+          const event = events.find((e) => e.id === parseInt(eventId));
+          setCurrentEvent(event || null);
+
+          if (event) {
+            const address = `${event.street}, ${event.city}, ${event.state} ${event.zip}`;
+            try {
+              const response = await axios.get(
+                `https://maps.googleapis.com/maps/api/geocode/json`,
+                {
                   params: {
                     address,
-                    key: apiKey
-                  }
-                });
-                if (response.data.results.length > 0) {
-                  const location = response.data.results[0].geometry.location;
-                  setMapCenter({ lat: location.lat, lng: location.lng });
-                  setMarkerPosition({ lat: location.lat, lng: location.lng });
-                } else {
-                  console.error("No results found for address:", address);
+                    key: apiKey,
+                  },
                 }
-              } catch (error) {
-                console.error("Error fetching geocode:", error);
+              );
+              if (response.data.results.length > 0) {
+                const location = response.data.results[0].geometry.location;
+                setMapCenter({ lat: location.lat, lng: location.lng });
+                setMarkerPosition({ lat: location.lat, lng: location.lng });
+              } else {
+                console.error("No results found for address:", address);
               }
-      
-              const session = await fetchAuthSession();
-              const cognitoUserId = session?.tokens?.idToken?.payload?.sub;
-              setLoggedInUser(cognitoUserId || null);
-  
-              if (eventId && cognitoUserId) {
-                const isUserAttending = await checkAttendance(eventId, cognitoUserId);
-                setIsAttending(isUserAttending);
-              }
+            } catch (error) {
+              console.error("Error fetching geocode:", error);
             }
-          } catch (error) {
-            console.error("Error fetching event details or checking attendance:", error);
+
+            const session = await fetchAuthSession();
+            const cognitoUserId = session?.tokens?.idToken?.payload?.sub;
+            setLoggedInUser(cognitoUserId || null);
+
+            if (eventId && cognitoUserId) {
+              const isUserAttending = await checkAttendance(
+                eventId,
+                cognitoUserId
+              );
+              setIsAttending(isUserAttending);
+            }
           }
+        } catch (error) {
+          console.error(
+            "Error fetching event details or checking attendance:",
+            error
+          );
         }
-      };
-  
-      fetchEventData();
-    }, [eventId, events, apiKey]);
+      }
+    };
+
+    fetchEventData();
+  }, [eventId, events, apiKey]);
 
   const handleAttendEvent = async () => {
     try {
@@ -124,9 +136,10 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     setShowAttendees(!showAttendees);
     fetchAttendees();
   };
+
   useEffect(() => {
     fetchAttendees();
-  });
+  }, [showAttendees, eventId]);
 
   if (!selectedEvent) {
     return <div>Event not found.</div>;
@@ -138,8 +151,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
 
   const spotsLeft = selectedEvent.maxAttendees - attendees.length;
 
- return (
-  <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
+  return (
+    <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
       <div className="flex justify-center py-8 px-4">
         <div className="w-full">
           <h1 className="text-3xl font-bold text-center mb-4">
@@ -147,10 +160,10 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
           </h1>
           <div className="flex justify-center pb-8">
             <Map
-                center={mapCenter}
-                zoom={zoom}
-                markerPosition={markerPosition}
-              />
+              center={mapCenter}
+              zoom={zoom}
+              markerPosition={markerPosition}
+            />
           </div>
           <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto">
             <img
@@ -258,9 +271,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             </div>
           </div>
         </div>
-          </div>
-        </div>
-);
+      </div>
+    </div>
+  );
 };
 
 export default EventDetailPage;
