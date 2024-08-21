@@ -167,7 +167,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
       <div className="flex justify-center py-8 px-4">
         <div className="w-full">
-          <h1 className="text-3xl font-bold text-center mb-4">
+          <h1 className="text-3xl font-extrabold text-center mb-4">
             {selectedEvent.title}
           </h1>
           <div className="flex justify-center pb-8">
@@ -177,7 +177,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               markerPosition={markerPosition}
             />
           </div>
-          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto">
+          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto h-[500px]"> {/* Fixed height added here */}
             <img
               className="object-cover w-full md:w-1/2 h-96 md:h-auto rounded-t-lg md:rounded-l-lg"
               src={selectedEvent.image}
@@ -209,6 +209,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 {selectedEvent.description}
               </p>
               <div className="flex justify-center">
+
                 {loggedInUser !== eventCreator && (
                   <>
                     {isAttending ? (
@@ -287,7 +288,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 </button>
               </div>
               {showAttendees && (
-                <div className="mt-4 text-left">
+                <div className="mt-4 text-left overflow-auto max-h-32"> {/* Limit height and allow scrolling */}
                   <h3 className="text-xl font-bold mb-2">Attendees:</h3>
                   {attendees.length > 0 ? (
                     <ul className="list-disc list-inside">
