@@ -10,6 +10,7 @@ import {
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
 import axios from "axios";
+import Map from './Map'; 
 
 interface EventDetailPageProps {
   events: Event[];
@@ -38,7 +39,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
           try {
             const event = events.find((e) => e.id === parseInt(eventId));
             setCurrentEvent(event || null);
-  
+      
             if (event) {
               const address = `${event.street}, ${event.city}, ${event.state} ${event.zip}`;
               try {
@@ -58,25 +59,24 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               } catch (error) {
                 console.error("Error fetching geocode:", error);
               }
-  
+      
               const session = await fetchAuthSession();
               const cognitoUserId = session?.tokens?.idToken?.payload?.sub;
               setLoggedInUser(cognitoUserId || null);
-
-        if (eventId && cognitoUserId) {
-          const isUserAttending = await checkAttendance(eventId, cognitoUserId);
-          setIsAttending(isUserAttending);
+  
+              if (eventId && cognitoUserId) {
+                const isUserAttending = await checkAttendance(eventId, cognitoUserId);
+                setIsAttending(isUserAttending);
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching event details or checking attendance:", error);
+          }
         }
-      } catch (error) {
-        console.error(
-          "Error fetching auth session or checking attendance:",
-          error
-        );
-      }
-    };
-
-    fetchTokenAndCheckAttendance();
-  }, [eventId]);
+      };
+  
+      fetchEventData();
+    }, [eventId, events, apiKey]);
 
   const handleAttendEvent = async () => {
     try {
@@ -144,6 +144,13 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
           <h1 className="text-3xl font-bold text-center mb-4">
             {selectedEvent.title}
           </h1>
+          <div className="flex justify-center pb-8">
+            <Map
+                center={mapCenter}
+                zoom={zoom}
+                markerPosition={markerPosition}
+              />
+          </div>
           <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto">
             <img
               className="object-cover w-full md:w-1/2 h-96 md:h-auto rounded-t-lg md:rounded-l-lg"

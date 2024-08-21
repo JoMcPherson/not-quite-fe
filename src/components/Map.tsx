@@ -32,17 +32,23 @@ const Map: React.FC<MapProps> = ({ center, zoom, markerPosition })  => {
 
   const initializeMap = () => {
     if (mapRef.current && !map) {
+      console.log("Initializing map");
       const newMap = new google.maps.Map(mapRef.current, {
         center,
         zoom,
       });
       setMap(newMap);
 
+      console.log("Map initialized", newMap);
+
+      console.log("Marker position", markerPosition);
+
       if (markerPosition) {
-        new google.maps.marker.AdvancedMarkerElement({
+        const marker =  new google.maps.Marker({
           map: newMap,
           position: markerPosition,
         });
+        console.log("Marker created", marker);
       }
     }
   };
