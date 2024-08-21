@@ -23,8 +23,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
   const [currentEvent, setCurrentEvent] = useState<any>(null);
-
-  const [eventCreator, setEventCreator] = useState(selectedEvent?.cognitoUserId);
+  const eventCreator = selectedEvent?.cognitoUserId;
+  
+  const [hostedBy, setHostedBy] = useState("Loading...");
   const [isAttending, setIsAttending] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [attendees, setAttendees] = useState<string[]>([]);
@@ -78,7 +79,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             if (typeof(cognitoUserId) === "string") {
               const retrievedCreator = await fetchHostedBy(event.cognitoUserId);
               if (typeof(retrievedCreator) === "string") {
-              setEventCreator(retrievedCreator);
+              setHostedBy(retrievedCreator);
             }
           }
             
@@ -202,7 +203,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <b>Hosted By: </b>
-                { eventCreator|| "Loading..." }
+                { hostedBy|| "Loading..." }
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <b>Description: </b>
