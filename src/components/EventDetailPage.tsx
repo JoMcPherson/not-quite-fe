@@ -209,55 +209,75 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 {selectedEvent.description}
               </p>
               <div className="flex justify-center">
-                {loggedInUser !== eventCreator ? (
-                  <button
-                    onClick={
-                      isAttending ? handleWithdrawEvent : handleAttendEvent
-                    }
-                    className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
-                      isAttending
-                        ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
-                        : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    } rounded-lg focus:outline-none`}
-                  >
-                    {isAttending ? "Withdraw" : "Sign up"}
-                    <svg
-                      className={`rtl:rotate-180 w-4 h-4 ms-2 ${
-                        isAttending ? "" : "transform rotate-0"
-                      }`}
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 14 10"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M1 5h12m0 0L9 1m4 4L9 9"
-                      />
-                    </svg>
-                  </button>
-                ) : (
-                  loggedInUser === eventCreator && (
-                    <div className="flex justify-center mt-4 space-x-2">
-                      <a
-                        href={`/edit/${eventId}`}
-                        className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
-                      >
-                        Edit Event
-                      </a>
+                {loggedInUser !== eventCreator && (
+                  <>
+                    {isAttending ? (
                       <button
-                        onClick={() => deleteEvent(selectedEvent.id)}
-                        className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                        onClick={handleWithdrawEvent}
+                        className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d] rounded-lg focus:outline-none"
                       >
-                        Delete Event
+                        Withdraw
+                        <svg
+                          className="rtl:rotate-180 w-4 h-4 ms-2"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 14 10"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M1 5h12m0 0L9 1m4 4L9 9"
+                          />
+                        </svg>
                       </button>
-                    </div>
-                  )
+                    ) : (
+                      spotsLeft > 0 && (
+                        <button
+                          onClick={handleAttendEvent}
+                          className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-lg focus:outline-none"
+                        >
+                          Sign up
+                          <svg
+                            className="rtl:rotate-180 w-4 h-4 ms-2"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 10"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M1 5h12m0 0L9 1m4 4L9 9"
+                            />
+                          </svg>
+                        </button>
+                      )
+                    )}
+                  </>
+                )}
+                {loggedInUser === eventCreator && (
+                  <div className="flex justify-center mt-4 space-x-2">
+                    <a
+                      href={`/edit/${eventId}`}
+                      className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                    >
+                      Edit Event
+                    </a>
+                    <button
+                      onClick={() => deleteEvent(selectedEvent.id)}
+                      className="inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800"
+                    >
+                      Delete Event
+                    </button>
+                  </div>
                 )}
               </div>
+
               <div className="flex justify-center mt-4">
                 <button
                   onClick={handleFetchAttendees}
