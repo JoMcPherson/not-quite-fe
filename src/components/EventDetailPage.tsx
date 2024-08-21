@@ -158,7 +158,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
       <div className="flex justify-center py-8 px-4">
         <div className="w-full">
-          <h1 className="text-3xl font-bold text-center mb-4">
+          <h1 className="text-3xl font-extrabold text-center mb-4">
             {selectedEvent.title}
           </h1>
           <div className="flex justify-center pb-8">
@@ -168,7 +168,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               markerPosition={markerPosition}
             />
           </div>
-          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto">
+          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto h-[500px]"> {/* Fixed height added here */}
             <img
               className="object-cover w-full md:w-1/2 h-96 md:h-auto rounded-t-lg md:rounded-l-lg"
               src={selectedEvent.image}
@@ -205,17 +205,15 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                     onClick={
                       isAttending ? handleWithdrawEvent : handleAttendEvent
                     }
-                    className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${
-                      isAttending
-                        ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
-                        : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    } rounded-lg focus:outline-none`}
+                    className={`inline-flex items-center px-4 py-3 text-sm font-medium text-center text-white ${isAttending
+                      ? "bg-[#ff0000] hover:bg-[#ff4d4d] focus:ring-[#ff6666] dark:bg-[#e60000] dark:hover:bg-[#ff3333] dark:focus:ring-[#ff4d4d]"
+                      : "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      } rounded-lg focus:outline-none`}
                   >
                     {isAttending ? "Withdraw" : "Sign up"}
                     <svg
-                      className={`rtl:rotate-180 w-4 h-4 ms-2 ${
-                        isAttending ? "" : "transform rotate-0"
-                      }`}
+                      className={`rtl:rotate-180 w-4 h-4 ms-2 ${isAttending ? "" : "transform rotate-0"
+                        }`}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -258,7 +256,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 </button>
               </div>
               {showAttendees && (
-                <div className="mt-4 text-left">
+                <div className="mt-4 text-left overflow-auto max-h-32"> {/* Limit height and allow scrolling */}
                   <h3 className="text-xl font-bold mb-2">Attendees:</h3>
                   {attendees.length > 0 ? (
                     <ul className="list-disc list-inside">
