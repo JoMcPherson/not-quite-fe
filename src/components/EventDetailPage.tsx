@@ -7,6 +7,7 @@ import {
   checkAttendance,
   deleteEvent,
   withdrawEvent,
+  fetchHostedBy
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
 import axios from "axios";
@@ -22,8 +23,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const { eventId } = useParams<{ eventId: string }>();
   const selectedEvent = events.find((event) => event.id === parseInt(eventId!));
   const [currentEvent, setCurrentEvent] = useState<any>(null);
-  const eventCreator = selectedEvent?.cognitoUserId;
 
+  const [eventCreator, setEventCreator] = useState(selectedEvent?.cognitoUserId);
   const [isAttending, setIsAttending] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [attendees, setAttendees] = useState<string[]>([]);
@@ -73,7 +74,13 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             const session = await fetchAuthSession();
             const cognitoUserId = session?.tokens?.idToken?.payload?.sub;
             setLoggedInUser(cognitoUserId || null);
-
+            if (typeof(cognitoUserId) === "string") {
+              const retrievedCreator = await fetchHostedBy(cognitoUserId);
+              if (typeof(retrievedCreator) === "string") {
+              setEventCreator(retrievedCreator);
+            }
+          }
+            
             if (eventId && cognitoUserId) {
               const isUserAttending = await checkAttendance(
                 eventId,
@@ -93,6 +100,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
 
     fetchEventData();
   }, [eventId, events, apiKey]);
+
+
 
   const handleAttendEvent = async () => {
     try {
@@ -190,7 +199,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <b>Hosted By: </b>
-                {selectedEvent.cognitoUserId || "Unknown Host"}
+                { eventCreator|| selectedEvent.cognitoUserId }
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <b>Description: </b>

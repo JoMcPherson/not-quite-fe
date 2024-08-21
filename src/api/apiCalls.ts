@@ -50,4 +50,18 @@ const deleteEvent = async (id: number) => {
   });
 };
 
-export { checkAttendance, attendEvent, withdrawEvent, deleteEvent };
+const fetchHostedBy = async (cognitoUserId:string) => {
+  const session = await fetchAuthSession();
+  const idToken = session?.tokens?.idToken;
+  const response = await axios.get<boolean>(
+    `${API_BASE_URL}/users/username/${cognitoUserId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+export { checkAttendance, attendEvent, withdrawEvent, deleteEvent, fetchHostedBy };
