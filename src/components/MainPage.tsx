@@ -4,7 +4,7 @@ import "../styles/styles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../App.css";
-
+import Slideshow from "./Slideshow";
 interface MainPageProps {
   user: any;
   events: Event[];
@@ -73,10 +73,11 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
 
   return (
     <div className="main-page">
+      <Slideshow />
       <h1 className="text-center text-3xl font-bold my-8 headline">
-        Olympic Events
+        Not Quite Olympian Events
       </h1>
-      <div className="filter-section mb-8 p-4 bg-blue-100 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="filter-section mb-8 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="flex flex-col">
           <label htmlFor="sport" className="text-sm font-medium mb-1">
             Filter by Sport:
@@ -184,7 +185,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             <input
               type="search"
               id="default-search"
-              className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded bg-gray-50 "
               placeholder="Search"
               value={searchTerm}
               onChange={handleSearchChange}

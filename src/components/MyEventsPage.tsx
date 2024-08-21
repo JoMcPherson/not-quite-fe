@@ -69,7 +69,7 @@ const MyEventsPage: React.FC<MyEventsProps> = ({ user }) => {
         )}
       </div>
       <div className="events-section">
-        <h2 className="text-2xl font-bold mb-4">Signed up Events</h2>
+        <h2 className="text-2xl font-bold mt-4 mb-4">Events Attending</h2>
         {signedUpEvents.length > 0 ? (
           <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {signedUpEvents.map((event) => (

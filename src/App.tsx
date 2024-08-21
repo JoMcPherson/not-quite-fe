@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import EventDetailPage from "./components/EventDetailPage";
 import MyEventsPage from "./components/MyEventsPage";
-import MyAuthenticator from "./components/MyAutheticator";
+import MyAuthenticator from "./components/MyAuthenticator";
 
 function App() {
   const [events, setEvents] = useState<Event[]>([]);
