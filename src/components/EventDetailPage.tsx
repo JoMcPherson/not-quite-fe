@@ -29,6 +29,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const [attendees, setAttendees] = useState<string[]>([]);
   const [showAttendees, setShowAttendees] = useState(false);
   const [showSpotsLeft, setShowSpotsLeft] = useState(false);
+  const [spotsLeft, setSpotsLeft] = useState<number>(0);
 
   const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>({
     lat: 37.7749,
@@ -81,6 +82,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               );
               setIsAttending(isUserAttending);
             }
+
+            // Fetch initial attendees and calculate spots left
+            fetchAttendees();
           }
         } catch (error) {
           console.error(
@@ -98,6 +102,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     try {
       await attendEvent(eventId!);
       setIsAttending(true);
+      setSpotsLeft(spotsLeft - 1); // Decrease spots left by 1
+      fetchAttendees(); // Refresh attendees list
     } catch (error) {
       console.error("Error attending event:", error);
     }
@@ -107,6 +113,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
     try {
       await withdrawEvent(eventId!);
       setIsAttending(false);
+      setSpotsLeft(spotsLeft + 1); // Increase spots left by 1
+      fetchAttendees(); // Refresh attendees list
     } catch (error) {
       console.error("Error withdrawing from event:", error);
     }
@@ -126,6 +134,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
         }
       );
       setAttendees(response.data);
+      setSpotsLeft(selectedEvent!.maxAttendees - response.data.length); // Calculate spots left
       setShowSpotsLeft(true);
     } catch (error) {
       console.error("Error fetching attendees:", error);
@@ -144,12 +153,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   if (!selectedEvent) {
     return <div>Event not found.</div>;
   }
-
-  if (!selectedEvent) {
-    return <div>Event not found.</div>;
-  }
-
-  const spotsLeft = selectedEvent.maxAttendees - attendees.length;
 
   return (
     <div className="flex flex-col min-h-screen w-full max-w-7xl mx-auto">
