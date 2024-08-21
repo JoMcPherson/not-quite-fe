@@ -206,7 +206,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
                 alt={event.title}
                 className="mb-4 w-full h-48 object-cover rounded"
               />
-              <h2 className="text-xl font-bold">{event.title}</h2>
+              <h2 className="text-3xl font-bold">{event.title}</h2>
               <p>{event.description}</p>
               <p>
                 <strong>Date:</strong> {new Date(event.date).toLocaleString()}
