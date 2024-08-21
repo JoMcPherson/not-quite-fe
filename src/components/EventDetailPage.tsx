@@ -10,6 +10,7 @@ import {
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
 import axios from "axios";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 interface EventDetailPageProps {
   events: Event[];
@@ -71,7 +72,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
       const token = session?.tokens?.idToken;
 
       const response = await axios.get<string[]>(
-        `http://localhost:8080/event_attendees/events/${eventId}`,
+        `${API_BASE_URL}/event_attendees/events/${eventId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -88,17 +89,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   if (!selectedEvent) {
     return <div>Event not found.</div>;
   }
-
-  const deleteEvent = async (id: number) => {
-    const session = await fetchAuthSession();
-    const token = session?.tokens?.idToken;
-    try {
-      await deleteEvent(id);
-      console.log("Event deleted");
-    } catch (error) {
-      console.error("Error deleting event:", error);
-    }
-  };
 
   if (!selectedEvent) {
     return <div>Event not found.</div>;
