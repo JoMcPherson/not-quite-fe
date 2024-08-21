@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "/images/NotQuiteLogo.png";
-import MyAuthenticator from "./MyAutheticator";
+import background from "/images/background.jpeg";
+import MyAuthenticator from "./MyAuthenticator";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,23 +12,26 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header>
-      <nav className="bg-purple-200 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800 shadow-md">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl ">
+    <header className="w-full">
+      <nav
+        className="relative w-full bg-cover bg-center bg-no-repeat text-white shadow-md"
+        style={{ backgroundImage: `url(${background})` }}
+      >
+        <div className="flex flex-wrap justify-between items-center mx-auto px-4 lg:px-6 py-2.5 w-full max-w-screen-xl">
           <Link to="/" className="flex items-center">
             <img
               src={Logo}
-              className="mr-3 h-6 sm:h-9"
+              className="mr-3 h-12 sm:h-16"
               alt="Not Quite Olympians Logo"
             />
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white text-purple-600 headline">
+            <h1 className="text-center text-3xl font-bold text-white my-8 headline">
               Not Quite Olympians
-            </span>
+            </h1>
           </Link>
           <button
             onClick={toggleMenu}
             type="button"
-            className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="inline-flex items-center p-2 ml-1 text-sm text-white rounded-lg lg:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
             aria-controls="mobile-menu"
             aria-expanded={isOpen}
           >
@@ -58,15 +62,16 @@ const Header: React.FC = () => {
             </svg>
           </button>
           <div
-            className={`w-full lg:flex lg:w-auto lg:order-1 ${isOpen ? "block" : "hidden"
-              }`}
+            className={`w-full lg:flex lg:w-auto lg:order-1 ${
+              isOpen ? "block" : "hidden"
+            }`}
             id="mobile-menu"
           >
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
               <li>
                 <Link
                   to="/create"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 text-purple-600"
+                  className="block py-2 pr-4 pl-3  text-xl text-white border-b border-gray-100 hover:bg-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                 >
                   Create Event
                 </Link>
@@ -74,7 +79,7 @@ const Header: React.FC = () => {
               <li>
                 <Link
                   to="/my_events"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 text-purple-600"
+                  className="block py-2 pr-4 pl-3 text-xl text-white border-b border-gray-100 hover:bg-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                 >
                   My Events
                 </Link>
@@ -85,7 +90,7 @@ const Header: React.FC = () => {
                     <Link
                       to="/"
                       onClick={signOut}
-                      className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 text-purple-600"
+                      className="block py-2 pr-4 text-xl pl-3 text-white border-b border-gray-100 hover:bg-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                     >
                       Sign out
                     </Link>
