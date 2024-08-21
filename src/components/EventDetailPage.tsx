@@ -76,7 +76,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             const cognitoUserId = session?.tokens?.idToken?.payload?.sub;
             setLoggedInUser(cognitoUserId || null);
             if (typeof(cognitoUserId) === "string") {
-              const retrievedCreator = await fetchHostedBy(cognitoUserId);
+              const retrievedCreator = await fetchHostedBy(event.cognitoUserId);
               if (typeof(retrievedCreator) === "string") {
               setEventCreator(retrievedCreator);
             }
