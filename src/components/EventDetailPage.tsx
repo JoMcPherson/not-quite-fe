@@ -25,7 +25,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
   const [currentEvent, setCurrentEvent] = useState<any>(null);
   const eventCreator = selectedEvent?.cognitoUserId;
   
-  const [hostedBy, setHostedBy] = useState(selectedEvent?.cognitoUserId);
+  const [hostedBy, setHostedBy] = useState("Loading...");
   const [isAttending, setIsAttending] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [attendees, setAttendees] = useState<string[]>([]);
