@@ -137,6 +137,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ sports }) => {
           <select
             name="sport"
             id="sport"
+            data-testid="sport"
             value={formData.sport}
             onChange={handleChange}
             className="input-field select-field"
