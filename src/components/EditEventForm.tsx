@@ -33,6 +33,48 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
     createdAt: "", // Keep track of createdAt
   });
 
+  const [showSuccessBanner, setShowSuccessBanner] = useState<boolean>(false);
+  const [updatedEventId, setUpdatedEventId] = useState<number>(0);
+
+  const successBanner = (
+    <div
+      className="flex items-center p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+      role="alert"
+    >
+      <svg
+        className="flex-shrink-0 inline w-4 h-4 me-3"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+      </svg>
+      <span className="sr-only">Info</span>
+      <div className="flex items-center ml-3">
+        <span className="font-medium text-center">
+          Event Updated Successfully!
+          <br />
+          <a href={`/events/${updatedEventId}`}>
+            Click here to see your event.
+          </a>
+        </span>
+      </div>
+      <div className="ml-3">
+        <button
+          onClick={() => setShowSuccessBanner(false)}
+          type="button"
+          className="text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800"
+          data-dismiss-target="#alert-additional-content-3"
+          aria-label="Close"
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+  );
+
+
   useEffect(() => {
     if (eventId) {
       const selectedEvent = events.find(
@@ -92,6 +134,9 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
           },
         }
       );
+      setUpdatedEventId(response.data.id);
+      setShowSuccessBanner(true);
+      setTimeout(() => setShowSuccessBanner(false), 10000);
       console.log("Event updated successfully:", response.data);
     } catch (error) {
       console.error("Error updating event:", error);
@@ -100,6 +145,7 @@ const EditEventForm: React.FC<EditEventFormProps> = ({
 
   return (
     <>
+      {showSuccessBanner && successBanner}
       <h1 className="text-center text-3xl font-bold my-8">Edit Event</h1>
       <form onSubmit={handleSubmit} className="basic-form">
         <div className="mb-4">
