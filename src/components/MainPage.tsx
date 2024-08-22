@@ -27,7 +27,10 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
 
       for (const event of events) {
         try {
-          const spots = await fetchSpotsLeft(event.id, event.maxAttendees);
+          const spots = await fetchSpotsLeft(
+            event.id.toString(),
+            event.maxAttendees
+          );
           spotsLeftData[event.id] = spots ?? 0;
         } catch (error) {
           console.error(
