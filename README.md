@@ -68,12 +68,12 @@ Not Quite Olympians is a web application developed by Tyler Byrd, Shaan Malhotra
 ## Project Resources
 
 **Database Diagram:**
-  ![Database Diagram](public/images/dbdiagram.png)
+![Database Diagram](public/images/dbdiagram.png)
 
 **Wireframe:**
-  ![Wireframe](public/images/wireframe.png)
+![Wireframe](public/images/wireframe.png)
 
 **Page Screenshots:**
-  ![Screenshot 1](images/pagescreenshots/screenshot1.png)
-  ![Screenshot 2](images/pagescreenshots/screenshot2.png)
-  ![Screenshot 3](images/pagescreenshots/screenshot3.png)
+![Screenshot 1](public/images/screenshot1.png)
+![Screenshot 2](public/images/screenshot2.png)
+![Screenshot 3](public/images/screenshot3.png)

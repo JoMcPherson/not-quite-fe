@@ -7,7 +7,7 @@ import {
   checkAttendance,
   deleteEvent,
   withdrawEvent,
-  fetchHostedBy
+  fetchHostedBy,
 } from "../api/apiCalls";
 import { fetchAuthSession } from "@aws-amplify/auth";
 import axios from "axios";
@@ -76,9 +76,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             const session = await fetchAuthSession();
             const cognitoUserId = session?.tokens?.idToken?.payload?.sub;
             setLoggedInUser(cognitoUserId || null);
-            if (typeof (cognitoUserId) === "string") {
+            if (typeof cognitoUserId === "string") {
               const retrievedCreator = await fetchHostedBy(event.cognitoUserId);
-              if (typeof (retrievedCreator) === "string") {
+              if (typeof retrievedCreator === "string") {
                 setHostedBy(retrievedCreator);
               }
             }
@@ -105,8 +105,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
 
     fetchEventData();
   }, [eventId, events, apiKey]);
-
-
 
   const handleAttendEvent = async () => {
     try {
@@ -178,7 +176,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               markerPosition={markerPosition}
             />
           </div>
-          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto h-[500px]"> {/* Fixed height added here */}
+          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 w-4/5 mx-auto h-[500px]">
+            {" "}
+            {/* Fixed height added here */}
             <div className="flex flex-col items-start ml-3 w-4/6">
               <img
                 className="mt-10 ml-9 md:w-10/12 md:h-auto rounded-t-lg md:rounded-l-lg"
@@ -187,7 +187,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               />
               <div className="min-h-40">
                 {showAttendees && (
-                  <div className="mt-4 ml-10 text-left overflow-auto max-h-32">
+                  <div className="mt-4 ml-10 text-left overflow-auto max-h-32 min-w-96">
                     <h3 className="text-xl font-bold mb-2">Attendees:</h3>
                     {attendees.length > 0 ? (
                       <ul className="list-disc list-inside">
@@ -208,7 +208,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               </h5>
               {showSpotsLeft ? (
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  <u>{spotsLeft} spots left!</u>
+                  <u>{spotsLeft} spot(s) left!</u>
                 </p>
               ) : (
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
@@ -216,7 +216,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 </p>
               )}
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                The event {selectedEvent.cancelled ? "is cancelled :\"" : "is still on!"}
+                The event{" "}
+                {selectedEvent.cancelled ? "is cancelled" : "is still on!"}
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <b>Time of Event: </b>
@@ -231,7 +232,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 {selectedEvent.description}
               </p>
               <div className="flex justify-center">
-
                 {loggedInUser !== eventCreator && (
                   <>
                     {isAttending ? (
@@ -309,20 +309,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                   {showAttendees ? "Hide Attendees" : "See Attendees"}
                 </button>
               </div>
-              {/* {showAttendees && (
-                <div className="mt-4 text-left overflow-auto max-h-32"> 
-                  <h3 className="text-xl font-bold mb-2">Attendees:</h3>
-                  {attendees.length > 0 ? (
-                    <ul className="list-disc list-inside">
-                      {attendees.map((username, index) => (
-                        <li key={index}>{username}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No attendees yet.</p>
-                  )}
-                </div>
-              )} */}
             </div>
           </div>
         </div>

@@ -37,8 +37,8 @@ describe("EventDetailPage", () => {
         </Routes>
       </MemoryRouter>
     );
-    const spotsElement = await screen.findByText(/spots/i);
-    expect(spotsElement).toBeInTheDocument();
+    const timeElement = await screen.findByText(/Time/i);
+    expect(timeElement).toBeInTheDocument();
     const title = await screen.findByText("gymnastics at the gymnasium");
     expect(title).toBeInTheDocument();
   });
@@ -54,7 +54,7 @@ describe("EventDetailPage", () => {
         </Routes>
       </MemoryRouter>
     );
-    const signUpButton = await screen.findByTestId("signUp");
+    const signUpButton = await screen.findByText("The event is still on!");
     expect(signUpButton).toBeInTheDocument();
   });
 });
