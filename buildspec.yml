@@ -1,15 +1,13 @@
 version: 0.2
-
 phases:
   install:
     runtime-versions:
       nodejs: 22.2.0
     commands:
       - echo Installing dependencies...
-      - ulimit -n 8192 # Increase the file descriptor limit
-      - npm cache clean --force # Clean npm cache
+      - npm cache clean --force
       - npm config set registry=https://registry.npmjs.org/
-      - npm install --verbose
+      - npm i --verbose
   pre_build:
     commands:
       - echo Running pre-build steps...
