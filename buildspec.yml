@@ -5,13 +5,12 @@ phases:
       nodejs: 22.2.0
     commands:
       - echo Installing dependencies...
-      - npm cache clean --force
+      - sudo ulimit -n unlimited
       - npm config set registry=https://registry.npmjs.org/
-      - npm i --verbose
+      - npm ci --verbose
   pre_build:
     commands:
       - echo Running pre-build steps...
-      - sudo ulimit -n unlimited
       - echo Downloading aws-exports.ts from S3...
       - aws s3 cp s3://notquitebucket/aws-exports.ts ./src/aws-exports.ts
 
