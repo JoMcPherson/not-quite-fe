@@ -28,6 +28,7 @@ export const sports = [
   "Karate",
   "Lacrosse",
   "Luge",
+  "Mountain Biking",
   "Rowing",
   "Rugby",
   "Sailing",

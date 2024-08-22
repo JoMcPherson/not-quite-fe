@@ -38,6 +38,15 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
     setSelectedCity(e.target.value);
   };
 
+  const handleResetFilters = () => {
+    setSelectedSport("");
+    setSelectedCity("");
+    setSelectedState("");
+    setSearchTerm("");
+    setStartDate(null);
+    setEndDate(null);
+  };
+
   const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.date);
     const sport = typeof event.sport === "string" ? event.sport.trim() : "";
@@ -192,6 +201,14 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             />
           </div>
         </form>
+        <div className="flex justify-center col-span-full">
+          <button
+            onClick={handleResetFilters}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          >
+            Reset Filters
+          </button>
+        </div>
       </div>
 
       <div className="event-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
