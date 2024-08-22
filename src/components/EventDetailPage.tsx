@@ -169,7 +169,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
       <div className="flex justify-center py-8 px-4">
         <div className="w-full">
           <h1 className="text-3xl font-extrabold text-center mb-4">
-            {selectedEvent.title}
+          {`${selectedEvent.street}, ${selectedEvent.city}, ${selectedEvent.state} ${selectedEvent.zip}`}
           </h1>
           <div className="flex justify-center pb-8">
             <Map
@@ -186,7 +186,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
             />
             <div className="flex flex-col justify-between p-6 leading-normal w-full md:w-1/2 text-center">
               <h5 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {`${selectedEvent.street}, ${selectedEvent.city}, ${selectedEvent.state} ${selectedEvent.zip}`}
+                {`${selectedEvent.title}`}
               </h5>
               {showSpotsLeft ? (
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
