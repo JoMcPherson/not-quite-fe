@@ -190,7 +190,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               </h5>
               {showSpotsLeft ? (
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  {spotsLeft} spots left
+                  <u>{spotsLeft} spots left!</u>
                 </p>
               ) : (
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
@@ -198,7 +198,10 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                 </p>
               )}
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                <b>Timing: </b>
+                The event {selectedEvent.cancelled ? "is cancelled :\"": "is still on!"}
+              </p>
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                <b>Time of Event: </b>
                 {new Date(selectedEvent.date).toLocaleString()}
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
