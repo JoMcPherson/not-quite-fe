@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../App.css";
 import Slideshow from "./Slideshow";
 import { fetchSpotsLeft } from "../api/apiCalls";
+import { sports } from "../assets/sports";
 
 interface MainPageProps {
   user: any;
@@ -129,7 +130,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
             className="p-2 border border-gray-300 rounded"
           >
             <option value="">All Sports</option>
-            {uniqueSports.map((sport, index) => (
+            {sports.map((sport, index) => (
               <option key={index} value={sport}>
                 {sport}
               </option>
