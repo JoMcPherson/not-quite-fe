@@ -187,7 +187,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
               />
               <div className="min-h-40">
                 {showAttendees && (
-                  <div className="mt-4 ml-10 text-left overflow-auto max-h-32">
+                  <div className="mt-4 ml-10 text-left overflow-auto max-h-32 min-w-96">
                     <h3 className="text-xl font-bold mb-2">Attendees:</h3>
                     {attendees.length > 0 ? (
                       <ul className="list-disc list-inside">
@@ -309,20 +309,6 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ events }) => {
                   {showAttendees ? "Hide Attendees" : "See Attendees"}
                 </button>
               </div>
-              {/* {showAttendees && (
-                <div className="mt-4 text-left overflow-auto max-h-32"> 
-                  <h3 className="text-xl font-bold mb-2">Attendees:</h3>
-                  {attendees.length > 0 ? (
-                    <ul className="list-disc list-inside">
-                      {attendees.map((username, index) => (
-                        <li key={index}>{username}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No attendees yet.</p>
-                  )}
-                </div>
-              )} */}
             </div>
           </div>
         </div>
