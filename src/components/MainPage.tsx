@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Event } from "../interfaces/Event";
 import "../styles/styles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../App.css";
 import Slideshow from "./Slideshow";
+import { fetchSpotsLeft } from "../api/apiCalls";
+
 interface MainPageProps {
   user: any;
   events: Event[];
@@ -17,6 +19,30 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [spotsLeft, setSpotsLeft] = useState<{ [eventId: string]: number }>({}); // State for spots left
+
+  useEffect(() => {
+    const fetchAllSpotsLeft = async () => {
+      const spotsLeftData: { [eventId: string]: number } = {};
+
+      for (const event of events) {
+        try {
+          const spots = await fetchSpotsLeft(event.id, event.maxAttendees);
+          spotsLeftData[event.id] = spots ?? 0;
+        } catch (error) {
+          console.error(
+            "Error fetching spots left for event:",
+            event.id,
+            error
+          );
+        }
+      }
+
+      setSpotsLeft(spotsLeftData);
+    };
+
+    fetchAllSpotsLeft();
+  }, [events]);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,6 +113,7 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
         Not Quite Olympian Events
       </h1>
       <div className="filter-section mb-8 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Filters */}
         <div className="flex flex-col">
           <label htmlFor="sport" className="text-sm font-medium mb-1">
             Filter by Sport:
@@ -235,7 +262,8 @@ const MainPage: React.FC<MainPageProps> = ({ events }) => {
                 <strong>Sport:</strong> {event.sport}
               </p>
               <p>
-                <strong>Max Attendees:</strong> {event.maxAttendees}
+                <strong>Spots Left:</strong>{" "}
+                {spotsLeft[event.id] ?? "Loading..."}
               </p>
               <p>
                 <strong>Status:</strong>{" "}

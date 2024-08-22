@@ -50,7 +50,7 @@ const deleteEvent = async (id: number) => {
   });
 };
 
-const fetchHostedBy = async (cognitoUserId:string) => {
+const fetchHostedBy = async (cognitoUserId: string) => {
   const session = await fetchAuthSession();
   const idToken = session?.tokens?.idToken;
   const response = await axios.get<boolean>(
@@ -62,6 +62,34 @@ const fetchHostedBy = async (cognitoUserId:string) => {
     }
   );
   return response.data;
-}
+};
 
-export { checkAttendance, attendEvent, withdrawEvent, deleteEvent, fetchHostedBy };
+const fetchSpotsLeft = async (eventId: string, maxAttendees: number) => {
+  try {
+    const session = await fetchAuthSession();
+    const token = session?.tokens?.idToken;
+
+    const response = await axios.get<string[]>(
+      `${API_BASE_URL}/event_attendees/events/${eventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const attendeesCount = response.data.length;
+    return maxAttendees - attendeesCount;
+  } catch (error) {
+    console.error("Error fetching attendees:", error);
+  }
+};
+
+export {
+  checkAttendance,
+  attendEvent,
+  withdrawEvent,
+  deleteEvent,
+  fetchHostedBy,
+  fetchSpotsLeft,
+};
