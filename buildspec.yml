@@ -11,6 +11,7 @@ phases:
   pre_build:
     commands:
       - echo Running pre-build steps...
+      - sudo ulimit -n unlimited
       - echo Downloading aws-exports.ts from S3...
       - aws s3 cp s3://notquitebucket/aws-exports.ts ./src/aws-exports.ts
 
